@@ -1,0 +1,193 @@
+---
+title: "Applied Linear Statistical Models - Chapter 1"
+author: "Ed Young"
+date: "8/26/2019"
+output: tufte::tufte_html
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache=TRUE)
+```
+
+$Y_i=\beta_0+\beta_1X_i+\epsilon_i\\
+Q=\sum_{i=1}^{n} (Y_i-\beta_0-\beta_1X_i)^2\\
+b_1=\frac{\sum(X_i-\bar{X})(Y_i-\bar{Y})}{\sum(X_i-\bar{X})^2}\\
+b_0=\bar{Y}-b_1\bar{X}\\
+s^2=MSE=\frac{SSE}{n-2}=\frac{\sum\epsilon_i^2}{n-2}\\$
+
+
+
+
+# (Problem 1.19) Grade Point Average
+
+The director of admissions of a small college selected 120 students at random from the new freshman class in a study to determine whether a student's grade point average at the end of the freshman year can be predicted from the ACT test score.  Use the data provided and a assume a first-order regression model is appropriate.
+
+## a. Obtain the least squares estimates of $\beta_0 \textrm{ and } \beta_1$ and state the estimated regression function.
+
+```{r}
+df<-read.table("CH01PR19.txt")     
+model119<-lm(V1~V2,df)
+model119$coefficients[1]
+model119$coefficients[2]
+```
+$\hat{Y}=$ `r model119$coefficients[1]` + `r model119$coefficients[2]`(X)
+
+## b. Plot the estimated regression function and the data.  Does the estimated regression function appear to fit the data well?
+
+```{marginfigure}
+Note the high variance.  It should be tested whether a linear regression figure is the best match.
+```
+```{r}
+df<-read.table("CH01PR19.txt")     
+model<-lm(V1~V2,df)
+with(df,plot(V2,V1))
+abline(a=2.11405, b=0.03883)
+```
+
+## c. Obtain a point estimate of the mean freshman GPA for sutdents with ACT text score X=30.
+
+```{r}
+df<-read.table("CH01PR19.txt") 
+mean(df$V1[df$V2==30])
+```
+
+## d. What is the point estimate of the change in the mean response when the entrance test score increase by one point?
+
+```{r}
+df<-read.table("CH01PR19.txt") 
+mean(df$V1[df$V2==31])-mean(df$V1[df$V2==30])
+```
+
+
+# (Problem 1.20) Copier Maintenance
+
+The tri-City Office Equipment Corporation sells an imported copier on a fanchise basis and performs preventive maintenance and repair service on this copier.  The data below have been collected from 45 recent calls on users to perform routine preventive maintnance service:  for each call, X is the number of copiers serviced and Y is the total number of minutes spent by the service person.  Assume that first-order regression model is appropriate.
+
+## a. Obain the estimated regression function
+
+```{r}
+df<-read.table("CH01PR20.txt", col.names=c("Y","X"))
+model120<-lm(Y~X, df)
+```
+
+$\hat{Y}$= `r model120$coefficient[1]` + `r model120$coefficient[2]`(X)
+
+## b. Plot the estimates regression function and the data.  How well does the estimated regression funtion fit the data?
+
+```{r}
+df<-read.table("CH01PR20.txt", col.names=c("Y","X"))
+model120<-lm(Y~X, df)
+with(df,plot(X,Y))
+abline(a=model120$coefficients[1], b=model120$coefficients[2])
+```
+
+## c. Interpret $\beta_0$ in your estimated regression function.  Does $\beta_0$ provide any relevant information here?  explain.
+
+$\beta_0$ represents the amount of time it would take to repair 0 machines.  That has no meaning, since a negative time value has no meaning.
+
+## d. Obtain a point estimate of the mean service time when X=5 copiers are serviced.
+
+```{r}
+df<-read.table("CH01PR20.txt", col.names=c("Y","X"))  
+mean(df$Y[df$X==5])
+```
+
+# (Problem 1.21) Airfreight breakage
+
+A substance used in biological and medical research is shipped by airfreight to users in cartons of 1.000 ampules.  The data, involving 10 shipments, were collected on the number of times the carton was transferred from one aircraft to another over the shipment route (X) and the number of ampules found to be broken upon arrival (Y).  Assume that first-order regression model is appropriate.
+
+## a. Obtain the estimated regression function.  Plot the estimated regression function and the data.
+
+```{r}
+df<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
+model121<-lm(Y~X,df)
+with(df,plot(X,Y))
+abline(a=model121$coefficients[1], b=model121$coefficients[2])
+```
+
+$\hat{Y}$= `r model121$coefficient[1]` + `r model121$coefficient[2]`(X)
+
+## b. Obtain a point estimate of the expected number of broken ampules when X=1 transfer is made
+
+`r model121$coefficient[1]+model121$coefficient[2]`
+
+## c.  Estimate the increase in the expected number of ampules broken when there are 2 transfers as compared to 1 transfer.
+
+`r model121$coefficient[2]`
+
+## d.  Verify that your fitted regression line goes through the point $(\hat{X}, \hat{Y})$
+
+mean(df$Y)==(model121$coefficients[1])+(model121$coefficients[2]*mean(df$X))
+14.2=14.2
+
+# (Problem 1.24) Refer to Copier maintenance Problem 1.20
+
+## a. Obtain the residuals $e_i$ and the sum of the squared residuals $\sum(e_i^2)$.  What is the relation between the sum of the squared residuals here and the quantity $Q$ in $Q=\sum_{i=1}^{n} (Y_i-\beta_0-\beta_1X_i)^2$?
+
+```{r}
+df<-read.table("CH01PR20.txt", col.names=c("Y","X"))
+model120<-lm(Y~X, df)
+model120$residuals
+sum(model120$residuals^2)
+sum((df$Y-model120$coefficients[1]-model120$coefficients[2]*df$X)^2)
+```
+
+They are the same.
+
+## b.  Obtain point estimates of $\sigma^2$ and $\sigma$.  In what units is $\sigma$ expressed?
+
+`r sum((model120$residuals)^2)/(length(model120$residuals)-2)`
+
+`r sqrt(sum((model120$residuals)^2)/(length(model120$residuals)-2))`
+
+# (Problem 1.25) Refer to Airfreight breakage Prolem 1.21
+
+## a. Obtain the residual for the first case.  What is its relation $\epsilon_1$?
+
+```{r}
+df<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
+model121<-lm(Y~X,df)
+model121$residuals[1]
+```
+
+
+## b. Compute $\sum \epsilon_i^2$ and $MSE$.  What is estimated by $MSE$?
+
+$\sum \epsilon_i^2$=`r sum((model121$residuals)^2)`
+
+$MSE$=`r sum((model121$residuals)^2)/(length(model121$residuals)-2)`
+
+$\sigma^2$
+
+# (Problem 1.27) Muscle Mass.
+
+A person's muscle mass is expected to decrease with age.  To explore this relationship in women, a nutritionist randomly selected 15 women from each 10-year age group, beginning with age 40 and ending with age 79.  The results follow:  X is age, and Y is a measure of muscle mass.  Assume that first-order regression model is appropriate.
+
+## a.  Obtain the estimated regression function.  Plot the estimated regression function and the data.  Does a linear regression function appear to give a good fit here?  Does your plot support the anticipation that muscle mass decreases with age?
+
+```{r}
+df<-read.table("CH01PR27.txt", col.names=c("Y","X"))
+model127<-lm(Y~X, df)
+with(df,plot(X,Y))
+abline(a=model127$coefficients[1], b=model127$coefficients[2])
+```
+
+$\hat{Y}$=`r model127$coefficients[1]`+`r model127$coefficients[2]`X
+
+## b. Obtain the following:
+
+### 1. a point estimate of the difference in the mean muscle mass for women differing in age by one year
+
+`r model127$coefficients[2]`
+
+### 2. a point estimate of the mean muscle mass for women aged X=60 years
+
+`r model127$coefficients[1]+(model127$coefficients[2]*60)`
+
+### 3. the value of the residual for the eighth case
+
+`r model127$residuals[8]`
+
+### 4. a point estimate of $\sigma^2$
+
+`r sum((model127$residuals)^2)/(length(model127$residuals)-2)`

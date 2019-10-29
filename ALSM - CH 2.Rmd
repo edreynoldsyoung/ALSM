@@ -1,0 +1,1076 @@
+---
+title: "Applied Linear Statistical Models - Chapter 2"
+author: "Ed Young"
+date: "8/27/2019"
+output:
+     html_document:
+          theme: null
+          highlight: null
+          css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache=TRUE)
+library(tidyverse)
+library(pwr)
+library(jtools)
+library(latex2exp)
+library(data.table)
+```
+## Useful Formulas
+
+****
+
+<span style="display:block" id="note"> Estimation of $b_1$ </span>
+
+$\sigma^2\{b_1\}=\frac{\sigma^2}{\sum(X_i-\bar{X})^2}\\
+s^2=MSE=\frac{SSE}{n-2}=\frac{\sum\epsilon_i^2}{n-2}\\
+s^2\{b_1\}=\frac{MSE}{\sum(X_i-\bar{X})^2}; s\{b_1\}=\sqrt{(\frac{MSE}{\sum(X_i-\bar{X})^2})}\\
+b_1\pm t(1-\alpha/2; n-2)s\{b_1\}\\
+H_0: \beta_1=\beta_{10}\\
+H_1: \beta_1 \neq \beta_{10}\\$
+
+<span style="display:block" id="note">Note that if $\beta_{10}=0$ then this formula simplifies to $t^*=\frac{b_1}{s\{b_1\}}$ </span>
+
+$\quad t^*=\frac{b_1-\beta_{10}}{s\{b_1\}}\\
+\quad \textrm{If } |t^*| \leq t(1-\frac{\alpha}{2};n-2) \textrm{, conclude } H_0\\
+\quad \textrm{If } |t^*| > t(1-\frac{\alpha}{2};n-2) \textrm{, conclude } H_a\\$
+
+****
+
+$P-Value: Probability_{(T)}\{|t^*|>|value|\}=2t(-|t^*|, df)\\
+Power= Probability\{|t^*| > t(1-\frac{\alpha}{2};n-2|\delta)\}\\$
+
+****
+
+<span style="display:block" id="note">Estimation of $b_0$ </span>
+
+$s^2\{b_0\}=MSE\left [\frac{1}{n}+\frac{\bar{X}^2}{\sum(X_i-\bar{X})^2} \right ]\\
+\frac{b_0-\beta_0}{s\{b_0\}}t(n-2)\\
+b_0\pm t(1-\alpha/2; n-2)s\{b_0\}\\$
+
+****
+
+<span style="display:block" id="note">Estimation of $\{\hat{Y_h}\}$ </span>
+
+$E\{\hat{Y_h}\}=\beta_0+\beta_1X_h\\$
+
+<span style="display:block" id="note">Note: The variance of $\hat{Y_h}$ is smallest when $X_h=\bar{X}$ </span>
+
+$\sigma^2\{\hat{Y_h}\}=\sigma^2 \left [ \frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
+s^2\{\hat{Y_h}\}=MSE \left [ \frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
+\textrm{Confidence Interval for }E\{\hat{Y_h}\}:  \hat{Y_h} \pm t(1-\frac{\alpha}{2}; n-2)s\{\hat{Y_h}\}$
+
+****
+
+<span style="display:block" id="note">Estimation of Predicted Outcome</span>
+<span style="display:block" id="note">Note that the variance of a predicted outcome:</span>
+<span style="display:block" id="note">1. Variation in possible mean Y</span>
+<span style="display:block" id="note">2. Given the mean of Y - </span>
+<span style="display:block" id="note">Variation within the probability distribution of Y</span>
+
+$s^2\{pred\}=MSE+s^2\{\hat{Y_h}\}=MSE \left [ 1+\frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
+\textrm{Confidence Interval for }Y_{h: predicted}: \hat{Y_h}\pm t(1-\frac{\alpha}{2};n-2)s\{pred\}\\$
+
+****
+
+<span style="display:block" id="note">Prediction of Mean of M New Observations for Given $X_h$</span>
+<span style="display:block" id="note">Note: variance of $s^2\{predmean\}$ has two components:</span>
+<span style="display:block" id="note">1. the variance of the mean $\bar{Y}$</span>
+<span style="display:block" id="note">2. the variance of the sampling distirubtion $\hat{Y_h}$</span>
+
+$\textrm{Confidence Interval for }Y_{h: predicted mean}: \hat{Y_h}\pm t(1-\frac{\alpha}{2};n-2)s\{predmean\}\\
+s^2\{predmean\}=\frac{MSE}{m}+s^2\{\hat{Y_h}\}=MSE\left [\frac{1}{m}+\frac{1}{n}+\frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}\right ]\\$
+
+****
+
+<span style="display:block" id="note">Confidence Band for Regression Line</span>
+
+$\hat{Y_h} \pm Ws\{\hat{Y_h}\}\\
+W^2=2F(1-\alpha;2,n-2)\\$
+
+****
+
+<span style="display:block" id="note">Analysis of Variance approach to Regression</span>
+
+$SSTO=\sum(Y_i-\bar{Y})^2\\
+SSE=\sum(Y_i-\hat{Y_i})^2\\
+SSR=\sum(\hat{Y_i}-\bar{Y})^2=\beta_1^2\sum(X_i-\bar{X})^2\\
+SSTO=SSR+SSE\\
+MSR=\frac{SSR}{1}\\
+MSE=\frac{SSE}{n-2}
+E\{MSE\}=\sigma^2\\
+E\{MSR\}=\sigma^2+\beta_1^2\sum(X_i-\bar{X})^2\\
+F^*=\frac{MSR}{MSE}\\
+\textrm{Desicion Rule:}\\
+\quad \textrm{if }F^* \leq F(1-\alpha;1,n-2) \textrm{; conclude }H_0\\
+\quad \textrm{if }F^* > F(1-\alpha;1,n-2) \textrm{; conclude }H_a$
+
+****
+
+<span style="display:block" id="note">Coefficient of Determination and Coefficient of Correlation</span>
+
+$R^2=\frac{SSR}{SSTO}=1-\frac{SSE}{SSTO}\\$
+
+<span style="display:block" id="note">The $\pm$ is according to whether he slope of the fitted regression line is positive or negative</span>
+
+$r= \pm \sqrt{R^2}$
+
+****
+ 
+## (Problem 2.5) Refer to **Copier maintenance** Problem 1.20
+
+### a. Estimate the change in the mean service time when the number of copiers serviced increases by one.  Use a 90 percent confidence interval.  Interpret your confidence interval.
+
+```{r}
+df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
+model120<-lm(Y~X,df20)
+n<-length(df20$X)
+B1<-model120$coefficients[2]
+MSE<-sum(model120$residuals^2)/(n-2)
+s2b1<-MSE/sum((df20$X-mean(df20$X))^2)
+sb1<-sqrt(s2b1)
+t<-qt(.95,n-2)
+lb<-B1-t*sb1
+up<-B1+t*sb1
+```
+
+change in the mean service time when the number of copiers serviced increases by one `r lb` $\leq$ `r B1` $\leq$ `r up`
+
+### b. Conduct a t test to determine whether or not there is a linear association between X and Y here; control for $\alpha$ risk at .10.  State the alternatives, decision rule, and conclusion.  What is the P-value of your test?
+
+
+```{r}
+df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
+model120<-lm(Y~X,df20)
+n<-length(df20$X)
+B1<-model120$coefficients[2]
+MSE<-sum(model120$residuals^2)/(n-2)
+s2b1<-MSE/sum((df20$X-mean(df20$X))^2)
+sb1<-sqrt(s2b1)
+t<-qt(.95,n-2)
+tstar<-B1/sb1
+p<-round(2*pt(-abs(tstar), n-2), digits=5)
+```
+
+$H_0: \beta_1=0\\
+H_1: \beta_1 \neq 0\\
+\textrm{If } |t^*| \leq t(1-\frac{\alpha}{2};n-2) \textrm{, conclude } H_0\\
+\textrm{If } |t^*| > t(1-\frac{\alpha}{2};n-2) \textrm{, conclude } H_a\\$
+
+When $\alpha=.10$ and n=45
+
+then $t(1-\frac{.10}{2}, 45-2)=t(.95, 43)=$ `r t`
+
+When $b_1=$ `r B1`; and $s\{b_1\}=$ `r sb1` 
+
+then $t^*=\frac{b_1}{s\{b_1\}}=$ `r tstar`
+
+Since $t^*>t(.95, 43)$, we conclude $H_a$, that $\beta_1 \neq 0$ or that there is a linear association between copiers serviced and work hours.
+
+The P-Value is `r p`
+
+### c. Are our results in parts (a) and (b) consistent?  Explain.
+
+Yes - since the confidence interval for the slope does not include 0.
+
+### d. The manufacturer has suggested that the mean required time should not increase by more than 14 minutes for each additional copier that is serviced on a service call.  Conduct a test to decide whether this standard is being satisfied by Tr-City.  Control the risk of a Type 1 error at .05.  State the alternatives, decidion rule, and conclusion.  What is the P-value of the test?
+
+```{r}
+df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
+model120<-lm(Y~X,df20)
+n<-length(df20$X)
+B1<-model120$coefficients[2]
+MSE<-sum(model120$residuals^2)/(n-2)
+s2b1<-MSE/sum((df20$X-mean(df20$X))^2)
+sb1<-sqrt(s2b1)
+t<-qt(.975,n-2)
+tstar<-(B1-14)/sb1
+p<-round(2*pt(-abs(tstar), n-2), digits=5)
+```
+
+$\quad H_0: \beta_1 \leq 14\\
+\quad H_a: \beta_1 > 14\\
+\quad t^*=\frac{b_1-14}{s\{b_1\}}\\
+\quad \textrm{If } |t^*| \leq t(1-\frac{\alpha}{2};n-2) \textrm{, conclude } H_0\\
+\quad \textrm{If } |t^*| > t(1-\frac{\alpha}{2};n-2) \textrm{, conclude } H_a$
+
+With $\alpha=.05$ and n=45
+
+then $t(1-\frac{.05}{2}, 45-2)=t(.975, 43)=$ `r t`
+
+When $b_1=$ `r B1` and $b_{10}=14$; and $s\{b_1\}=$ `r sb1` 
+
+then $t^*=\frac{b_1-b_{10}}{s\{b_1\}}=\frac{`r B1`-14}{`r sb1`}=$ `r tstar`
+
+Since $t^* > t(.975, 43)$, we conclude $H_a$, that $\beta_1 >14$ or this disproves the hypothesis of the manager that the mean required time should not increase by more than 14 minutes for each additional copier that is serviced on a service call.
+
+The P-Value is `r p`
+
+### e. Does $b_0$ give any relevant information here about the "start-up" time on calls - i.e., about the time required before service work is begun on the copiers at a customer location?
+
+The intercept, $b_0$ is negative, which does not have meaning regarding time.  However, the negative intercept means the first copier serviced takes less time than each additional copier - implying that there is no significant "start-up" time.
+
+## (Problem 2.6) Refer to **Airfreight breakage** Problem 1.21.
+
+### a.  Estimate $\beta_1$ with a 95 percent confidence interval.  Interpret your interval estimate.
+
+```{r}
+df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
+model121<-lm(Y~X,df21)
+n<-length(df21$X)
+B1<-model121$coefficients[2]
+MSE<-sum(model121$residuals^2)/(n-2)
+s2b1<-MSE/sum((df21$X-mean(df21$X))^2)
+sb1<-sqrt(s2b1)
+t<-qt(.975,n-2)
+lb<-B1-t*sb1
+up<-B1+t*sb1
+```
+
+$\beta_1$: `r lb` $\leq$ `r B1` $\leq$ `r up`
+
+### b. Conduct a $t$ test to decide whether or not there is a linear association between number of times a carton is transferred (X) and number of broken ampules (Y).  Us a level of significance of .05.  State the alternatives, decision rule, and conclusion.  What is the P-value of the test?
+
+
+```{r}
+df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
+model121<-lm(Y~X,df21)
+n<-length(df21$X)
+B1<-model121$coefficients[2]
+MSE<-sum(model121$residuals^2)/(n-2)
+s2b1<-MSE/sum((df21$X-mean(df21$X))^2)
+sb1<-sqrt(s2b1)
+t<-qt(.975,n-2)
+tstar<-B1/sb1
+p<-round(2*pt(-abs(tstar), n-2), digits=5)
+```
+
+$\quad H_0: \beta_1 =0\\
+\quad H_a: \beta_1 \neq 0\\
+\quad t^*=\frac{b_1}{s\{b_1\}}\\
+\quad \textrm{If } |t^*| \leq t(1-\frac{\alpha}{2};n-2) \textrm{, conclude } H_0\\
+\quad \textrm{If } |t^*| > t(1-\frac{\alpha}{2};n-2) \textrm{, conclude } H_a$
+
+Whith $\alpha=.05$ and n=45
+
+then $t(1-\frac{.05}{2}, 45-2)=t(.975, 43)=$ `r t`
+
+When $b_1=$ `r B1`; and $s\{b_1\}=$ `r sb1` 
+
+then $t^*=\frac{b_1}{s\{b_1\}}=\frac{`r B1`}{`r sb1`}=$ `r tstar`
+
+Since $t^*>t(.975, 43)$, we conclude $H_a$, that $\beta_1 \neq 0$ or that there is a linear association between copiers serviced and work hours.
+
+The P-Value is `r p`
+
+
+### c. $\beta_0$ represents here the mean number of ampules broken when no transfers of the shipment are made - i.e., when X=0.  Obtain a 95 percent conficence interval for $\beta_0$ and interpret it.
+
+```{r}
+df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
+model121<-lm(Y~X,df21)
+n<-length(df21$X)
+B0<-round(model121$coefficients[1], digits=4)
+MSE<-round(sum(model121$residuals^2)/(n-2), digits=4)
+s2b0<-MSE*((1/n)+(mean(df21$X)^2/sum((df21$X-mean(df21$X))^2)))
+sb0<-round(sqrt(s2b0), digits=4)
+t<-round(qt(.975,n-2), digits=4)
+lb<-round(B0-t*sb0, digits=4)
+ub<-round(B0+t*sb0, digits=4)
+```
+
+$\beta_0=`r B0`\\
+n=`r n`\\
+\alpha=0.25\\
+t(1-\alpha/2; n-2)=t(.975,9)=`r t`\\
+MSE=`r MSE`\\
+\bar{X}^2=`r mean(df21$X)^2`\\
+\sum(X_i-\bar{X})^2=`r sum((df21$X-mean(df21$X))^2)`\\
+s^2\{\beta_0\}=
+MSE\left [\frac{1}{n}+\frac{\bar{X}^2}{\sum(X_i-\bar{X})^2} \right ]=
+`r MSE` \left [ \frac{1}{`r n`}+\frac{`r mean(df21$X)^2`}{`r sum((df21$X-mean(df21$X))^2)`} \right ]=
+`r s2b0`\\
+s\{\beta_0\}=\sqrt{s^2\{\beta_0\}}=\sqrt{0.44}=`r sb0`\\
+\beta_0 \pm t(1-\alpha/2; n-2)s\{\beta_0\}=`r B0` \pm (`r t`)(`r sb0`)\\$
+
+
+$\beta_0$:  `r lb` $\leq$ `r B0` $\leq$ `r ub`
+
+### d. A consultant has suggested, on the basis of previous experience, that the mean number of broken ampules should not exceed 9.0 when no transfers are made.  Conduct an appropriate test, useing $\alpha=.025$.  State the alternatives, decision rule, and conclusion.  What is the P-value of the test?
+
+```{r}
+df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
+model121<-lm(Y~X,df21)
+n<-length(df21$X)
+B0<-round(model121$coefficients[1], digits=4)
+MSE<-round(sum(model121$residuals^2)/(n-2), digits=4)
+s2b0<-MSE*((1/n)+(mean(df21$X)^2/sum((df21$X-mean(df21$X))^2)))
+sb0<-sqrt(s2b0)
+t<-qt(1-(.025/2),n-2)
+tstar<-(B0-9)/sb0
+p<-round(2*pt(-abs(tstar), n-2), digits=5)
+```
+
+$\quad H_0: \beta_0 \leq 9\\
+\quad H_a: \beta_1 > 9\\
+\quad t^*=\frac{b_0-9}{s\{b_0\}}\\
+\quad \textrm{If } |t^*| \leq t(1-\frac{\alpha}{2};n-2) \textrm{, conclude } H_0\\
+\quad \textrm{If } |t^*| > t(1-\frac{\alpha}{2};n-2) \textrm{, conclude } H_a$
+
+With $\alpha=.025$ and n=10
+
+then $t(1-\frac{.025}{2}, 10-2)=t(.9875, 8)=$ `r t`
+
+When $b_0=$ `r B0` and $b_{10}=9$; and $s\{b_0\}=$ `r sb0` 
+
+then $t^*=\frac{b_0-b_{10}}{s\{b_0\}}=\frac{`r B0`-9}{`r sb0`}=$ `r tstar`
+
+The P-Value is `r p`
+
+Since $t^* \leq t(.9875, 8)$, we conclude $H_0$, that $\beta_0 \leq 9$.  This supports the hypothesis of the manager the mean number of broken ampules should not exceed 9.0 when no transfers are made.  The P-Value > 0.5, which means that the conclusion is not certain.  In addition, the interpretation of the intercept is uncertain since we cannot be certain that a linear regression model is appropriate when the scope of the model is extended to X=0. 
+
+### e. Obtain the power of your test in part (b) if actually $\beta_1=2.0$.  Assume $\sigma\{b_1\}=.50$  Also obtain the power of your test in part (d) if actually $\beta_0=11$.  Assume $\sigma\{b_0\}=.75$
+
+```{r}
+pwr.t.test(d=(2-0)/.50, sig.level=0.05, n=45, type = "two.sample" )
+```
+
+
+## (Problem 2.14) Refer to **Copier maintenance** Problem 1.20
+
+### a. Obtain a 90 percent confidence interval for the mean service time on calls in which six copier are serviced.  Interpret your confidence interval.
+
+Because we are asked to estimate the *mean* service time, I will use the following formulas:
+
+$E\{\hat{Y_h}\}=\beta_0+\beta_1X_h\\
+s^2\{\hat{Y_h}\}=MSE \left [ \frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
+s\{\hat{Y_h}\}=\sqrt{(s^2\{\hat{Y_h}\})}\\
+\textrm{Confidence Interval for }E\{\hat{Y_h}\}:  \hat{Y_h} \pm t(1-\frac{\alpha}{2}; n-2)s\{\hat{Y_h}\}$
+
+```{r}
+df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
+model120<-lm(Y~X,df20)
+n<-length(df20$X)
+B0<-model120$coefficients[1]
+B1<-model120$coefficients[2]
+MSE<-sum(model120$residuals^2)/(n-2)
+s2y6<-MSE*((1/n)+((6-mean(df20$X))^2)/sum((df20$X-mean(df20$X))^2))
+sy6<-sqrt(s2y6)
+EY6<-round(B0+B1*6, digits = 4)
+t<-qt(1-(.10/2),n-2)
+```
+ 
+$E\{\hat{Y}_{X=6}\}=$ `r EY6`
+
+The 99% Confidence Interval is `r EY6-t*sy6` < `r EY6` < `r EY6+t*sy6` 
+
+$\bar{X}=$ `r mean(df20$X)`
+
+### b. Obtain a 90 percent prediction interval for the service time on the next call in which six copiers are serviced.  Is your predication interval wider than the corresponding confidence interval in part (a)?  Should it be?
+
+Because we are asked to estimate *predicted* values, I will use the following formulas:
+
+$s^2\{pred\}=MSE+s^2\{\hat{Y_h}\}=MSE \left [ 1+\frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
+\textrm{Confidence Interval for }Y_{h: predicted}: \hat{Y_h}\pm t(1-\frac{\alpha}{2};n-2)s\{pred\}\\$
+
+```{r}
+df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
+model120<-lm(Y~X,df20)
+n<-length(df20$X)
+B0<-model120$coefficients[1]
+B1<-model120$coefficients[2]
+MSE<-sum(model120$residuals^2)/(n-2)
+s2pred6<-MSE*(1+(1/n)+((6-mean(df20$X))^2)/sum((df20$X-mean(df20$X))^2))
+spred6<-sqrt(s2pred6)
+EY6<-round(B0+B1*6, digits = 4)
+t<-qt(1-(.10/2),n-2)
+```
+
+$\hat{Y_{X=6}}=$ `r EY6`
+
+The 99% Confidence Interval for the *predicted* service time for the next call in which six copeirs are serviced is:
+
+`r EY6-t*spred6`<`r EY6`<`r EY6+t*spred6`
+
+This Confidence Interval *predicted* service time should be wider than the Confidence Interval around the estimated *mean* service time, since the variance in the *predicted* time takes into account the possible variation in the *mean* estimate as well as the variation within the probability distrubion of the *predicted* time around the mean estimate.
+
+### c. Management wishes to estimate the expected service time per copier on calls in which six copiers are serviced.  Obtain an appropriate 90 percent confidence interval by convenerting the interval obtained in part (a).  Interpret the converted confidence interval.
+
+```{r}
+df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
+model120<-lm(Y~X,df20)
+n<-length(df20$X)
+B0<-model120$coefficients[1]
+B1<-model120$coefficients[2]
+MSE<-sum(model120$residuals^2)/(n-2)
+s2y6<-MSE*((1/n)+((6-mean(df20$X))^2)/sum((df20$X-mean(df20$X))^2))
+sy6<-sqrt(s2y6)
+EY6<-round(B0+B1*6, digits = 4)
+t<-qt(1-(.10/2),n-2)
+```
+ 
+To estimate the expected (mean) service time *per* copier on calls in which six copiers are serviced, I will simply divide the mean service time for six copiers by six.
+
+$E\{\hat{Y_{X=6}}\}=$ `r EY6/6`
+
+The 90% Confidence Interval is `r (EY6-t*sy6)/6` < `r EY6/6` < `r (EY6+t*sy6)/6` 
+
+
+### d. Determine the boundary values of the 90 percent confidence band for the regression line when $X_h=6$.  Is your confidence band wider at this point than the confidence interval in part (a)?  Should it be?
+
+```{r}
+df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
+model120<-lm(Y~X,df20)
+n<-length(df20$X)
+a<-.10
+Xh<-6
+B0<-model120$coefficients[1]
+B1<-model120$coefficients[2]
+MSE<-sum(model120$residuals^2)/(n-2)
+s2Yh<-MSE*((1/n)+((Xh-mean(df20$X))^2)/sum((df20$X-mean(df20$X))^2))
+sYh<-sqrt(s2Yh)
+EYh<-B0+B1*Xh
+W2<-2*qf(1-a, 2, n-2)
+W<-sqrt(W2)
+```
+
+To calculate Confidence Band for a regression line I will use the formulas:
+$\hat{Y_h} \pm Ws\{\hat{Y_h}\}\\
+W^2=2F(1-\alpha;2,n-2)\\$
+
+When $X_h=6$ the 90% Confidence band is `r round(EYh-W*sYh, digits=4)`<`r round(EYh, digits=4)`<`r round(EYh+W*sYh, digits=4)`
+
+The 90% Confidence band is wider than it is in part (a) because the confidence band must encompass the entire regression line, and not only at the single level of $X_h$
+
+## (Problem 2.15) Refer to **Airfreight breakage** Problem 1.21
+
+### a. Because of the changes in airline routes, shipments may have to be tranferred more frequently than in the past.  Estimate the mean breakage for the following numbers of transers:  X=2, 4.  Use separate 99 percent confidence intervals. Interpret your prediction interval.
+
+Because we are estimating *mean* breakage, rather than *predicted* breakage, I will use the following formulas:
+
+$E\{\hat{Y_h}\}=\beta_0+\beta_1X_h\\
+s^2\{\hat{Y_h}\}=MSE \left [ \frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
+s\{\hat{Y_h}\}=sqrt(s^2\{\hat{Y_h}\})\\
+\textrm{Confidence Interval for }E\{\hat{Y_h}\}:  \hat{Y_h} \pm t(1-\frac{\alpha}{2}; n-2)s\{\hat{Y_h}\}$
+
+```{r}
+df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
+model121<-lm(Y~X,df21)
+n<-length(df21$X)
+B0<-model121$coefficients[1]
+B1<-model121$coefficients[2]
+MSE<-sum(model121$residuals^2)/(n-2)
+s2y2<-MSE*((1/n)+((2-mean(df21$X))^2)/sum((df21$X-mean(df21$X))^2))
+sy2<-sqrt(s2y2)
+s2y4<-MSE*((1/n)+((4-mean(df21$X))^2)/sum((df21$X-mean(df21$X))^2))
+sy4<-sqrt(s2y4)
+EY2<-round(B0+B1*2, digits = 4)
+EY4<-round(B0+B1*4, digits = 4)
+t<-qt(1-(.01/2),n-2)
+```
+
+$E\{\hat{Y_{X=2}}\}=$ `r EY2`
+The 99% Confidence Interval is `r EY2-t*sy2` < `r EY2` < `r EY2+t*sy2` 
+
+$E\{\hat{Y_{X=4}}\}=$ `r EY4`
+The 99% Confidence Interval is `r EY4-t*sy4` < `r EY4` < `r EY4+t*sy4` 
+
+The Confidence Intervals around $E\{\hat{Y}\}$ should be narrowest when $X_h=\bar{X}$.  In this case, $\bar{X}=1$ and since X=2 is closer to $\bar{X}$ than X=4, the confience interval should be narrower at X=2 than at X=4.
+
+
+### b. The next shipment will entail two transfers.  Obtain a 99 percent prediction interval for the number of broken ampules for this shipment.  Interpret your prediction interval.
+
+Because we are estimating *predicted* values, I will use the following formulas:
+
+$s^2\{pred\}=MSE+s^2\{\hat{Y_h}\}=MSE \left [ 1+\frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
+\textrm{Confidence Interval for }Y_{h: predicted}: \hat{Y_h}\pm t(1-\frac{\alpha}{2};n-2)s\{pred\}\\$
+
+```{r}
+df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
+model121<-lm(Y~X,df21)
+n<-length(df21$X)
+a<-.01
+B0<-model121$coefficients[1]
+B1<-model121$coefficients[2]
+Xh<-2
+MSE<-sum(model121$residuals^2)/(n-2)
+s2pred<-MSE*(1+(1/n)+((Xh-mean(df21$X))^2)/sum((df21$X-mean(df21$X))^2))
+spred<-sqrt(s2pred)
+EYh<-B0+B1*Xh
+t<-qt(1-(a/2),n-2)
+```
+
+The 99% prediction interval is `r round(EYh-t*spred, digits=4)`<`r round(EYh, digits=4)`<`r round(EYh+t*spred, digits=4)`
+
+The Confidence Interval for prediction is larger than the Confidence Interval for expected (mean) outcome, as it should be, since the CI for prediction must take into account not only the variance of the mean outcome, but also the variance in the probablity distrubion of Yh around the mean.
+
+### c. In the next several days, three independent shipments will be made, each entailing two transfers.  Obtain a 99 percent prediction interval for the mean number of ampules broken in the three shipments.  Convert this interval into a 99 percent prediction interval for the total number of ampules broken in the three shipments.
+
+Because the question is asking for mean prediction values, I will use the formulas:
+
+$\textrm{Confidence Interval for }Y_{h: predicted}: \hat{Y_h}\pm t(1-\frac{\alpha}{2};n-2)s\{predmean\}\\
+s^2\{predmean\}=\frac{MSE}{m}+s^2\{\hat{Y_h}\}=MSE\left [\frac{1}{m}+\frac{1}{n}+\frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}\right ]\\$
+
+```{r}
+df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
+model121<-lm(Y~X,df21)
+n<-length(df21$X)
+a<-.01
+m<-3
+B0<-model121$coefficients[1]
+B1<-model121$coefficients[2]
+Xh<-2
+MSE<-sum(model121$residuals^2)/(n-2)
+s2predmean<-MSE*((1/m)+(1/n)+((Xh-mean(df21$X))^2)/sum((df21$X-mean(df21$X))^2))
+spredmean<-sqrt(s2predmean)
+EYh<-B0+B1*Xh
+t<-qt(1-(a/2),n-2)
+```
+
+The 99% prediction interval for each shipment is `r round(EYh-t*spredmean, digits=4)`<`r round(EYh, digits=4)`<`r round(EYh+t*spredmean, digits=4)`
+
+The 99% prediction interval for the total number of ampules broken in the three shipments is  `r round(3*(EYh-t*spredmean), digits=4)`<`r round(3*EYh, digits=4)`<`r round(3*(EYh+t*spredmean), digits=4)`
+
+### d. Determine the boundary values of the 99 percent confidence band for the regression line when $X_h=2$ and when $X_h=4$.  Is your confidence band wider at these two points than the corresponding confidence intervals in part (a)?  Should it be?
+
+Because the question asks for boundary values of the confidence band, I will use the formulas 
+
+$\hat{Y_h} \pm Ws\{\hat{Y_h}\}\\
+W^2=2F(1-\alpha;2,n-2)\\$
+
+```{r}
+df20<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
+model121<-lm(Y~X,df21)
+n<-length(df21$X)
+a<-.01
+Xh2<-2
+Xh4<-4
+B0<-model121$coefficients[1]
+B1<-model121$coefficients[2]
+MSE<-sum(model121$residuals^2)/(n-2)
+s2Yh2<-MSE*((1/n)+((Xh2-mean(df21$X))^2)/sum((df21$X-mean(df21$X))^2))
+sYh2<-sqrt(s2Yh2)
+EYh2<-B0+B1*Xh2
+s2Yh4<-MSE*((1/n)+((Xh4-mean(df21$X))^2)/sum((df21$X-mean(df21$X))^2))
+sYh4<-sqrt(s2Yh4)
+EYh4<-B0+B1*Xh4
+W2<-2*qf(1-a, 2, n-2)
+W<-sqrt(W2)
+```
+
+The boundary values of the 99% conficence band for the regressionline when X~h~=2 is
+`r round(EYh2-W*sYh2, digits=4)`<`r EYh2`<`r round(EYh2+W*sYh2, digits=4)`
+
+The boundary values of the 99% conficence band for the regressionline when X~h~=4 is
+`r round(EYh4-W*sYh4, digits=4)`<`r EYh4`<`r round(EYh4+W*sYh4, digits=4)`
+
+The 99% Confidence band is wider than it is in part (a) because the confidence band must encompass the entire regression line, and not only at the single level of Xh.  As we would expect, the confidence band is narrower at X~2~ than at X~4~ becasue X~2~ is closer to the mean at X~1~
+
+## (Problem 2.24) Refer to **Copier maintenance** Problem 1.20 
+
+### a. Set up the basic ANOVA table in the format of Table 2.2.  Which elements of your table are additive?  Also set up the ANOVA table in the format of Table 2.3.  How do the two table differ?
+
+```{r}
+df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
+model120<-lm(Y~X,df20)
+anova(model120)
+```
+
+### b. Conduct an F test to determine whether or not there is a linear association between time spent and number of copier serviced; use $\alpha=.10$.  State the alternatives, decision rule, and conclusion.
+
+The questiopn is asking to use the F test from an ANOVA analysis.  I will use the formulas:
+
+$F^*=\frac{MSR}{MSE}\\
+\textrm{Desicion Rule:}\\
+\quad H_0: \beta_1=0\\
+\quad H_a: \beta_1 \neq 0\\
+\quad \textrm{if }F^* \leq F(1-\alpha;1,n-2) \textrm{; conclude }H_0\\
+\quad \textrm{if }F^* > F(1-\alpha;1,n-2) \textrm{; conclude }H_a$
+
+```{r}
+df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
+model120<-lm(Y~X,df20)
+n<-length(df20$X)
+a<-.10
+anova120<-anova(model120)
+F<-qf(1-a,1,n-2)
+```
+
+$F^*=$ `r round(anova120$'F value'[1], digits=4)`
+
+$F(1-\alpha;1,n-2)=$ `r round(F, digits=4)`
+
+Since `r round(anova120$'F value'[1], digits=4)` > `r round(F, digits=4)`, I conclude $H_a$, that $\beta_1 \neq 0$
+
+### c. By how much, relatively, is the total variation in number of minutes spent on a call reduced when the number of copiers serviced is introduced into the analysis?  Is this a relatively small or large reduction?  What is the name of this measure?
+
+The question is asking for the relative contribution of a predictor variable to the variation in the outcome variable.  This is measured by the Coefficient of Determination.  I will use the formulas
+
+$R^2=\frac{SSR}{SSTO}\\
+SSTO=SSR+SSE$
+
+
+```{r}
+df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
+model120<-lm(Y~X,df20)
+n<-length(df20$X)
+a<-.10
+anova120<-anova(model120)
+SSR<- anova120$`Sum Sq`[1]
+SSE<- anova120$`Sum Sq`[2]
+SSTO<-SSR+SSE
+```
+
+$SSR=$ `r round(SSR, digits=2)`
+
+$SSE=$ `r SSE`
+
+$SSTO=$ `r round(SSTO, digits=2)`
+
+$R^2=$ `r round(SSR/SSTO, digits=4)` 
+
+### d. Calculate r and attach the appropriate sign.
+
+```{r}
+df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
+model120<-lm(Y~X,df20)
+n<-length(df20$X)
+a<-.10
+anova120<-anova(model120)
+SSR<- anova120$`Sum Sq`[1]
+SSE<- anova120$`Sum Sq`[2]
+SSTO<-SSR+SSE
+R2<-SSR/SSTO
+r<-sqrt(R2)
+b1<-model120$coefficients[2]
+```
+
+$\beta_1=$ `r b1`
+
+Since $\beta_1>0$ r will have a positive sign
+
+$+$ `r r`
+
+### e. Which measure, r or R^2^, has the more clear-cut operational interpretation?
+
+In this case, R^2^ has a more clear-cut operational interpretation, since X is a predictor variable.
+
+## (Problem 2.25) Refer to **Airfreight breakage** Problem 1.21
+
+### a. Set up the ANOVA table.  Which elements are additive?
+
+```{r}
+df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
+model121<-lm(Y~X,df21)
+anova(model121)
+```
+
+The Sum Sq is additive, the Mean Sq is not.
+
+### b. Conduct an F test to decide whether or not there is a linear association between the number of times a carton is transferred and the number of broken ampules;  control the $\alpha$ risk at .05.  State the alternatives, decision rule, and conclusion.
+
+The questiopn is asking to use the F test from an ANOVA analysis.  I will use the formulas:
+
+$F^*=\frac{MSR}{MSE}\\
+\textrm{Desicion Rule:}\\
+\quad H_0: \beta_1=0\\
+\quad H_a: \beta_1 \neq 0\\
+\quad \textrm{if }F^* \leq F(1-\alpha;1,n-2) \textrm{; conclude }H_0\\
+\quad \textrm{if }F^* > F(1-\alpha;1,n-2) \textrm{; conclude }H_a$
+
+```{r}
+df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
+model121<-lm(Y~X,df21)
+n<-length(df21$X)
+a<-.05
+anova121<-anova(model121)
+F<-qf(1-a,1,n-2)
+```
+
+$F^*=$ `r round(anova121$'F value'[1], digits=4)`
+
+$F(1-\alpha;1,n-2)=$ `r round(F, digits=4)`
+
+Since `r round(anova121$'F value'[1], digits=4)` > `r round(F, digits=4)`, I conclude $H_a$, that $\beta_1 \neq 0$
+
+### c. Obtain the $t^*$ statistic for the test in part (b) and demonstrate numerically its equivalence to the $F^*$ statistic obtained in part (b)
+
+
+
+```{r}
+df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
+model121<-lm(Y~X,df21)
+n<-length(df21$X)
+B1<-model121$coefficients[2]
+MSE<-sum(model121$residuals^2)/(n-2)
+s2b1<-MSE/sum((df21$X-mean(df21$X))^2)
+sb1<-sqrt(s2b1)
+t<-qt(.975,n-2)
+tstar<-B1/sb1
+```
+
+$\quad H_0: \beta_1 =0\\
+\quad H_a: \beta_1 \neq 0\\
+\quad t^*=\frac{b_1}{s\{b_1\}}\\
+\quad \textrm{If } |t^*| \leq t(1-\frac{\alpha}{2};n-2) \textrm{, conclude } H_0\\
+\quad \textrm{If } |t^*| > t(1-\frac{\alpha}{2};n-2) \textrm{, conclude } H_a$
+
+Whith $\alpha=.05$ and n=45
+
+$t(1-\frac{.05}{2}, 45-2)=t(.975, 43)=$ `r t`
+
+$t^*=$ `r tstar` ;   $(t^*)^2=$ `r round(tstar^2, digits=4)` $=F^*$  
+
+Since $ |t^*| > t(1-\frac{\alpha}{2};n-2) \textrm{, conclude } H_a$
+
+
+### d. Calculate $R^2$ and $r$.  What proportion of the variation in Y is accounted for by introducing $X$ into the regression model?
+
+$R^2=\frac{SSR}{SSTO}\\
+SSTO=SSR+SSE$
+
+
+```{r}
+df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
+model121<-lm(Y~X,df21)
+n<-length(df21$X)
+a<-.10
+anova121<-anova(model121)
+SSR<- anova121$`Sum Sq`[1]
+SSE<- anova121$`Sum Sq`[2]
+SSTO<-SSR+SSE
+```
+
+$SSR=$ `r round(SSR, digits=2)`
+
+$SSE=$ `r SSE`
+
+$SSTO=$ `r round(SSTO, digits=2)`
+
+$R^2=$ `r round(SSR/SSTO, digits=4)` 
+
+$r=$ `r round(sqrt(SSR/SSTO), digits=4)`
+
+About 90.09% of the variance in $Y$ is accounted for by introducing $X$ into the regression model.
+
+
+## (Problem 2.27) Refer to **Muscle mass** Problem 1.27
+
+### a. Conduct a test to decide whether or not there is a negative linear association between amount of muscle mass and age.  Control the risk of Type I error at .05.  State the alternatives, decision rule, and conclusion.  What is the P-value of the test?
+
+I can use one-sided t-test to decide if the is a negative linear associaiton btween amount of muscle mass and age.  I will use the formulas:
+
+$H_0: \beta_1 \geq 0\\
+H_a: \beta_1 < 0\\
+\quad t^*=\frac{b_1-\beta_{10}}{s\{b_1\}}\\
+\quad \textrm{If } |t^*| \leq t(1-\alpha;n-2) \textrm{, conclude } H_0\\
+\quad \textrm{If } |t^*| > t(1-\alpha;n-2) \textrm{, conclude } H_a\\$
+
+I will set $\alpha=0.05$
+
+```{r}
+df27<-read.table("CH01PR27.txt", col.names=c("Y","X"))     
+model127<-lm(Y~X,df27)
+n<-length(df27$X)
+B1<-model127$coefficients[2]
+MSE<-sum(model127$residuals^2)/(n-2)
+s2b1<-MSE/sum((df27$X-mean(df27$X))^2)
+sb1<-sqrt(s2b1)
+t<-qt(.95,n-2)
+tstar<-B1/sb1
+p<-round(2*pt(-abs(tstar), n-2), digits=5)
+```
+
+$\beta_1=$ `r B1`
+
+$s\{b_1\}=$ `r sb1`
+
+$|t^*|=$ `r abs(tstar)`
+
+$t(.95, `r n-2` )=$ `r t`
+
+Since $t^*>t(.95, 58)$, I conclude $H_a$, that $\beta_1<0$
+
+The P-value is `r p` to within 5 digits.
+
+
+
+### b. The two-sided P-value for the test whether $\beta_0=0$ is 0+.  Can it now be concluded that $b_0$ provides relevant information on the amount of muscle mass at birth for a female child?
+
+No.  
+
+### c. Estimate with 95 percent confidence interval the difference in expected muscle mass for women whose ages differ by one year.  Why is it not necessary to know the specific ages to make this estimate?
+
+The expected change in the predicted variable for each unit changein the independent variable is the slope of the regression line, or $\beta_1$.  I will use the following formulas to extimate the 95% confidence interval for $\beta_1$
+
+$s^2=MSE=\frac{SSE}{n-2}=\frac{\sum\epsilon_i^2}{n-2}\\
+s^2\{b_1\}=\frac{MSE}{\sum(X_i-\bar{X})^2}; s\{b_1\}=\sqrt{(\frac{MSE}{\sum(X_i-\bar{X})^2})}\\
+b_1\pm t(1-\alpha/2; n-2)s\{b_1\}\\$
+
+```{r}
+df27<-read.table("CH01PR27.txt", col.names=c("Y","X"))     
+model127<-lm(Y~X,df27)
+n<-length(df27$X)
+B1<-model127$coefficients[2]
+MSE<-sum(model127$residuals^2)/(n-2)
+s2b1<-MSE/sum((df27$X-mean(df27$X))^2)
+sb1<-sqrt(s2b1)
+t<-qt(.975,n-2)
+lb<-B1-t*sb1
+up<-B1+t*sb1
+```
+
+The 95% Confidence for $\beta_1$ is:  `r lb` $\leq$ `r B1` $\leq$ `r up`
+
+## (Problem 2.28) Refer to **Muscle mass** Problem 1.27
+
+### a. Obtain a 95% confidence interval for the mean muscle mass for women of age 60.  Interpret your confidence interval.
+
+Because we are asked to estimate the *mean* muscle mass, I will use the following formulas:
+
+$E\{\hat{Y_h}\}=\beta_0+\beta_1X_h\\
+s^2\{\hat{Y_h}\}=MSE \left [ \frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
+s\{\hat{Y_h}\}=\sqrt{(s^2\{\hat{Y_h}\})}\\
+\textrm{Confidence Interval for }E\{\hat{Y_h}\}:  \hat{Y_h} \pm t(1-\frac{\alpha}{2}; n-2)s\{\hat{Y_h}\}$
+
+```{r}
+df27<-read.table("CH01PR27.txt", col.names=c("Y","X"))     
+model127<-lm(Y~X,df27)
+n<-length(df27$X)
+a<-.05
+B0<-model127$coefficients[1]
+B1<-model127$coefficients[2]
+MSE<-sum(model127$residuals^2)/(n-2)
+s2y60<-MSE*((1/n)+((60-mean(df27$X))^2)/sum((df27$X-mean(df27$X))^2))
+sy60<-sqrt(s2y60)
+EY60<-round(B0+B1*60, digits = 4)
+t<-qt(1-(a/2),n-2)
+```
+ 
+$E\{\hat{Y}_{X=60}\}=$ `r EY60`
+
+The 95% Confidence Interval is `r EY60-t*sy60` < `r EY60` < `r EY60+t*sy60` 
+
+$\bar{X}=$ `r mean(df27$X)`
+
+Becasue $X=60$ is so close to $\bar{X}$, I expect that the confidence interval at this point is as narrow as it will be at any other point.
+
+
+### b. Obtain a 95% prediction interval for the muscle mass of a woman whose age is 60.  Is the prediction interval relatively precise?
+
+Because we are asked to estimate *predicted* values, I will use the following formulas:
+
+$s^2\{pred\}=MSE+s^2\{\hat{Y_h}\}=MSE \left [ 1+\frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
+\textrm{Confidence Interval for }Y_{h: predicted}: \hat{Y_h}\pm t(1-\frac{\alpha}{2};n-2)s\{pred\}\\$
+
+```{r}
+df27<-read.table("CH01PR27.txt", col.names=c("Y","X"))     
+model127<-lm(Y~X,df27)
+n<-length(df27$X)
+a<-.05
+B0<-model127$coefficients[1]
+B1<-model127$coefficients[2]
+MSE<-sum(model127$residuals^2)/(n-2)
+s2y60<-MSE*(1+(1/n)+((60-mean(df27$X))^2)/sum((df27$X-mean(df27$X))^2))
+sy60<-sqrt(s2y60)
+EY60<-round(B0+B1*60, digits = 4)
+t<-qt(1-(a/2),n-2)
+```
+ 
+$E\{\hat{Y}_{X=60}\}=$ `r EY60`
+
+$s\{pred\}=$ `r sy60`
+
+$t(1-\frac{\alpha}{2};n-2)=$ `r t`
+
+The 95% Confidence Interval is `r EY60-t*sy60` < `r EY60` < `r EY60+t*sy60` 
+
+The 95% CI for predicted values is much larger than for mean values, because the CI must take into account both the variance in the mean values, and the variance in the predicted value around the mean.
+
+### c. Determine the boundary values of the 95% conficence band for the regression line when $X_h=60$.  Is your confidence band wider at this point than the confidence interval in part (a)?  Should it be?
+
+Because the question asks for boundary values of the confidence band, I will use the formulas 
+
+$\hat{Y_h} \pm Ws\{\hat{Y_h}\}\\
+W^2=2F(1-\alpha;2,n-2)\\$
+
+```{r}
+df27<-read.table("CH01PR27.txt", col.names=c("Y","X"))     
+model127<-lm(Y~X,df27)
+n<-length(df27$X)
+a<-.05
+Xh<-60
+B0<-model127$coefficients[1]
+B1<-model127$coefficients[2]
+MSE<-sum(model127$residuals^2)/(n-2)
+s2Yh60<-MSE*((1/n)+((Xh-mean(df27$X))^2)/sum((df27$X-mean(df27$X))^2))
+sYh60<-sqrt(s2Yh60)
+EYh60<-B0+B1*Xh
+W2<-2*qf(1-a, 2, n-2)
+W<-sqrt(W2)
+```
+
+The boundary values of the 95% conficence band for the regressionline when $X_h=60$ is
+`r round(EYh60-W*sYh60, digits=4)`<`r EYh60`<`r round(EYh60+W*sYh60, digits=4)`
+
+The confidence band is wider at this point the the confidence interval in part (a), as it should be, because the confidence band must encompass the entire regression line.
+
+## (Problem 2.29) Refer to **Muscle mass** Problem 1.27
+
+### a. Plot the deviations $Y_i-\hat{Y}_i$ against $X_i$ on one graph.  Plot the deviations $\hat{Y}_i - \bar{Y}$ against $X_i$ on another graph, using the same scales as in the first graph.  From your two grphs, does SSE or SSR appear to be the larger component of SSTO?  What does this imply about the magnitude of $R^2$
+
+```{r}
+df27<-read.table("CH01PR27.txt", col.names=c("Y","X"))     
+model127<-lm(Y~X,df27)
+B0<-model127$coefficients[1]
+B1<-model127$coefficients[2]
+ggplot(data=df27) +
+     geom_point(mapping = aes(x=X, y=Y-(B0+B1*X))) +
+     labs(x="X", y=TeX("$Y_i-\\hat{Y}_i$")) +
+     ylim(-30,30)
+ggplot(data=df27) +
+     geom_point(mapping=aes(x=X, y=(B0+B1*X)-mean(Y))) +
+     labs(x="X", y=TeX("$\\hat{Y}_i-\\bar{Y}$"))+
+     ylim(-30,30)
+```
+
+SSR appears it will be greater.
+
+### b. Set up the ANOVA table
+
+```{r}
+df27<-read.table("CH01PR27.txt", col.names=c("Y","X"))     
+model127<-lm(Y~X,df27)
+anova(model127)
+```
+
+### c. Test whether or not $\beta_1=0$ using an F test with $\alpha=.05$.  State the alternatives, decision rule, and conclusion.
+
+The questiopn is asking to use the F test from an ANOVA analysis.  I will use the formulas:
+
+$F^*=\frac{MSR}{MSE}\\
+\textrm{Desicion Rule:}\\
+\quad H_0: \beta_1=0\\
+\quad H_a: \beta_1 \neq 0\\
+\quad \textrm{if }F^* \leq F(1-\alpha;1,n-2) \textrm{; conclude }H_0\\
+\quad \textrm{if }F^* > F(1-\alpha;1,n-2) \textrm{; conclude }H_a$
+
+```{r}
+df27<-read.table("CH01PR27.txt", col.names=c("Y","X"))     
+model127<-lm(Y~X,df27)
+n<-length(df27$X)
+a<-.05
+anova127<-anova(model127)
+F<-qf(1-a,1,n-2)
+```
+
+$F^*=$ `r round(anova127$'F value'[1], digits=4)`
+
+$F(1-\alpha;1,n-2)=$ `r round(F, digits=4)`
+
+Since `r round(anova127$'F value'[1], digits=4)` > `r round(F, digits=4)`, I conclude $H_a$, that $\beta_1 \neq 0$
+
+
+
+### d. What proportion of the total variation in muscle mass remains "unexplaned" when age is introduced into the analysis?  Is this proportion relatively small or large?
+
+The question is asking for the relative contribution of a predictor variable to the variation in the outcome variable.  This is measured by the Coefficient of Determination.  I will use the formulas
+
+$R^2=\frac{SSR}{SSTO}\\
+SSTO=SSR+SSE$
+
+
+```{r}
+df27<-read.table("CH01PR27.txt", col.names=c("Y","X"))     
+model127<-lm(Y~X,df27)
+anova127<-anova(model127)
+SSR<- anova127$`Sum Sq`[1]
+SSE<- anova127$`Sum Sq`[2]
+SSTO<-SSR+SSE
+```
+
+$SSR=$ `r round(SSR, digits=2)`
+
+$SSE=$ `r SSE`
+
+$SSTO=$ `r round(SSTO, digits=2)`
+
+$R^2=$ `r round(SSR/SSTO, digits=4)` 
+
+About 25% of the variabion is left "unexplained" after age is introduced into the analysis.  This proportion is relatively small.
+
+### e. Obtain $R^2$ and $r$.
+
+$R^2$ = `r round(SSR/SSTO, digits=4)` 
+
+$r$ = `r round(sqrt(SSR/SSTO), 4)`
+
+## (Problem 2.62) Refer to the **CDI** data set.  Using $R^2$ as the criterion, which predictor variable accounts for the largest reduction in the variability in the number of active physicians?
+
+```{r, message=FALSE}
+cnames<-c("ID","County","State","Area","Pop","Young","Old","Phys","Beds","Crime","HighSchool","BA","Poverty","Unemploy","PerCapitaIncome","TotalIncome","Region")
+df62<-fread("http://users.stat.ufl.edu/~rrandles/sta4210/Rclassnotes/data/textdatasets/KutnerData/Appendix%20C%20Data%20Sets/APPENC02.txt", col.names=cnames)
+df62[,c("ID", "County","State","Region"):=NULL]
+variability<-function(data, y){
+     model<-lm(reformulate(y, "Phys"), data=data)
+     anova<-anova(model)
+     SSR<- anova$`Sum Sq`[1]
+     SSE<- anova$`Sum Sq`[2]
+     SSTO<-SSR+SSE
+     R2<-SSR/SSTO
+     return(round(R2,3))
+}
+nm1 <- setdiff(names(df62), "Phys")
+ans<-transpose(df62[, lapply(nm1, variability, data = .SD)])
+ans[, Predictor:=nm1]
+setnames(ans, "V1", "R2")
+setcolorder(ans, c("Predictor", "R2"))
+ans[order(-R2)]
+```
+
+
+The variables accounting for the greatest reduction in variability in the number of physicians are the
+
+1. Number of beds, 
+
+2. Total income of the county, and 
+
+3. Population of the County
+
+## (Problem 2.63) Refer to the CDI data set.  For each geographic region, regress per capita income against the percentage of individuals ina county having at least a bachelor's degree.  Obtain a separate interval estimate of $\beta_1$ for each region.  Use a 90 percent confidence coefficient in each case.  Do the regression nes for the different regions appear to have similar slopes?
+
+```{r, message=FALSE}
+cnames<-c("ID","County","State","Area","Pop","Young","Old","Phys","Beds","Crime","HighSchool","BA","Poverty","Unemploy","PerCapitaIncome","TotalIncome","Region")
+dt<-fread("http://users.stat.ufl.edu/~rrandles/sta4210/Rclassnotes/data/textdatasets/KutnerData/Appendix%20C%20Data%20Sets/APPENC02.txt", col.names=cnames)
+variability<-function(R, data){
+     model<-lm(PerCapitaIncome~BA, data=data, subset=(Region==R))
+     n<-length(data[Region==R])
+     B1<-model$coefficients[2]
+     MSE<-sum(model$residuals^2)/(n-2)
+     s2b1<-MSE/sum((data[Region==R, BA]-mean(data[Region==R, BA]))^2)
+     sb1<-sqrt(s2b1)
+     t<-qt(.95,n-2)
+     lb<-B1-t*sb1
+     ub<-B1+t*sb1
+     rt<-c(lb,B1,ub)
+     return(rt)
+}
+ans<-transpose(dt[, lapply(1:4, variability, data = .SD)])
+ans[, Region:=1:4]
+setnames(ans, 1:3, c("Lower Limit", "Beta_1", "Upper Limit"))
+setcolorder(ans, c("Region","Lower Limit", "Beta_1", "Upper Limit"))
+ans
+```
+The Slopes for the different regions appear to vary considerably, however, the 90% confidence intervals overlap, so I cannot say variation might not be random.
+
+## (Problem 2.47)
+
+
+<!---
+```{r, echo=FALSE, results='asis'}
+p<-c(" ")
+doc<-htmltools::span(id='marginnote', p)
+print(doc)
+```
+--->
