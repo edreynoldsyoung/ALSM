@@ -73,18 +73,18 @@ b_0\pm t(1-\alpha/2; n-2)s\{b_0\}\\$
 
 ****
 
-<span style="display:block" id="note">Estimation of $\{\hat{Y_h}\}$ </span>
+<span style="display:block" id="note">Estimation of $\{\hat{Y}_h\}$ </span>
 
 <span style="display:block" id="math">
-$E\{\hat{Y_h}\}=\beta_0+\beta_1X_h\\$
+$\hat{Y}_h=\beta_0+\beta_1X_h\\$
 </span>
 
-<span style="display:block" id="note">Note: The variance of $\hat{Y_h}$ is smallest when $X_h=\bar{X}$ </span>
+<span style="display:block" id="note">Note: The variance of $\hat{Y}_h$ is smallest when $X_h=\bar{X}$ </span>
 
 <span style="display:block" id="math">
-$\sigma^2\{\hat{Y_h}\}=\sigma^2 \left [ \frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
-s^2\{\hat{Y_h}\}=MSE \left [ \frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
-\textrm{Confidence Interval for }E\{\hat{Y_h}\}:  \hat{Y_h} \pm t(1-\frac{\alpha}{2}; n-2)s\{\hat{Y_h}\}$
+$\sigma^2\{\hat{Y}_h\}=\sigma^2 \left [ \frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
+s^2\{\hat{Y}_h\}=MSE \left [ \frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
+\textrm{Confidence Interval for }\hat{Y}_h:  \hat{Y}_h \pm t(1-\frac{\alpha}{2}; n-2)s\{\hat{Y}_h\}$
 </span>
 
 ****
@@ -96,8 +96,8 @@ s^2\{\hat{Y_h}\}=MSE \left [ \frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X
 <span style="display:block" id="note">Variation within the probability distribution of Y</span>
 
 <span style="display:block" id="math">
-$s^2\{pred\}=MSE+s^2\{\hat{Y_h}\}=MSE \left [ 1+\frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
-\textrm{Confidence Interval for }Y_{h: predicted}: \hat{Y_h}\pm t(1-\frac{\alpha}{2};n-2)s\{pred\}\\$
+$s^2\{pred\}=MSE+s^2\{\hat{Y}_h\}=MSE \left [ 1+\frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
+\textrm{Confidence Interval for }Y_{h: predicted}: \hat{Y}_h\pm t(1-\frac{\alpha}{2};n-2)s\{pred\}\\$
 </span>
 
 ****
@@ -105,11 +105,11 @@ $s^2\{pred\}=MSE+s^2\{\hat{Y_h}\}=MSE \left [ 1+\frac{1}{n}+ \frac{(X_h-\bar{X})
 <span style="display:block" id="note">Prediction of Mean of M New Observations for Given $X_h$</span>
 <span style="display:block" id="note">Note: variance of $s^2\{predmean\}$ has two components:</span>
 <span style="display:block" id="note">1. the variance of the mean $\bar{Y}$</span>
-<span style="display:block" id="note">2. the variance of the sampling distirubtion $\hat{Y_h}$</span>
+<span style="display:block" id="note">2. the variance of the sampling distirubtion $\hat{Y}_h$</span>
 
 <span style="display:block" id="math">
-$\textrm{Confidence Interval for }Y_{h: predicted mean}: \hat{Y_h}\pm t(1-\frac{\alpha}{2};n-2)s\{predmean\}\\
-s^2\{predmean\}=\frac{MSE}{m}+s^2\{\hat{Y_h}\}=MSE\left [\frac{1}{m}+\frac{1}{n}+\frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}\right ]\\$
+$\textrm{Confidence Interval for }Y_{h: predicted mean}: \hat{Y}_h\pm t(1-\frac{\alpha}{2};n-2)s\{predmean\}\\
+s^2\{predmean\}=\frac{MSE}{m}+s^2\{\hat{Y}_h\}=MSE\left [\frac{1}{m}+\frac{1}{n}+\frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}\right ]\\$
 </span>
 
 ****
@@ -117,7 +117,7 @@ s^2\{predmean\}=\frac{MSE}{m}+s^2\{\hat{Y_h}\}=MSE\left [\frac{1}{m}+\frac{1}{n}
 <span style="display:block" id="note">Confidence Band for Regression Line</span>
 
 <span style="display:block" id="math">
-$\hat{Y_h} \pm Ws\{\hat{Y_h}\}\\
+$\hat{Y}_h \pm Ws\{\hat{Y}_h\}\\
 W^2=2F(1-\alpha;2,n-2)\\$
 </span>
 
@@ -380,10 +380,10 @@ pwr.t.test(d=(2-0)/.50, sig.level=0.05, n=45, type = "two.sample" )
 
 Because we are asked to estimate the *mean* service time, I will use the following formulas:
 
-$E\{\hat{Y_h}\}=\beta_0+\beta_1X_h\\
-s^2\{\hat{Y_h}\}=MSE \left [ \frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
-s\{\hat{Y_h}\}=\sqrt{(s^2\{\hat{Y_h}\})}\\
-\textrm{Confidence Interval for }E\{\hat{Y_h}\}:  \hat{Y_h} \pm t(1-\frac{\alpha}{2}; n-2)s\{\hat{Y_h}\}$
+$\hat{Y}_h=\beta_0+\beta_1X_h\\
+s^2\{\hat{Y}_h\}=MSE \left [ \frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
+s\{\hat{Y}_h\}=\sqrt{(s^2\{\hat{Y}_h\})}\\
+\textrm{Confidence Interval for }\hat{Y}_h:  \hat{Y}_h \pm t(1-\frac{\alpha}{2}; n-2)s\{\hat{Y}_h\}$
 
 ```{r}
 df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
@@ -398,7 +398,7 @@ EY6<-round(B0+B1*6, digits = 4)
 t<-qt(1-(.10/2),n-2)
 ```
  
-$E\{\hat{Y}_{X=6}\}=$ `r EY6`
+$\hat{Y}_{X=6}=$ `r EY6`
 
 The 99% Confidence Interval is `r EY6-t*sy6` < `r EY6` < `r EY6+t*sy6` 
 
@@ -408,8 +408,8 @@ $\bar{X}=$ `r mean(df20$X)`
 
 Because we are asked to estimate *predicted* values, I will use the following formulas:
 
-$s^2\{pred\}=MSE+s^2\{\hat{Y_h}\}=MSE \left [ 1+\frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
-\textrm{Confidence Interval for }Y_{h: predicted}: \hat{Y_h}\pm t(1-\frac{\alpha}{2};n-2)s\{pred\}\\$
+$s^2\{pred\}=MSE+s^2\{\hat{Y}_h\}=MSE \left [ 1+\frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
+\textrm{Confidence Interval for }Y_{h: predicted}: \hat{Y}_h\pm t(1-\frac{\alpha}{2};n-2)s\{pred\}\\$
 
 ```{r}
 df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
@@ -449,7 +449,7 @@ t<-qt(1-(.10/2),n-2)
  
 To estimate the expected (mean) service time *per* copier on calls in which six copiers are serviced, I will simply divide the mean service time for six copiers by six.
 
-$E\{\hat{Y_{X=6}}\}=$ `r EY6/6`
+$\hat{Y}_{X=6}=$ `r EY6/6`
 
 The 90% Confidence Interval is `r (EY6-t*sy6)/6` < `r EY6/6` < `r (EY6+t*sy6)/6` 
 
@@ -473,7 +473,7 @@ W<-sqrt(W2)
 ```
 
 To calculate Confidence Band for a regression line I will use the formulas:
-$\hat{Y_h} \pm Ws\{\hat{Y_h}\}\\
+$\hat{Y}_h \pm Ws\{\hat{Y}_h\}\\
 W^2=2F(1-\alpha;2,n-2)\\$
 
 When $X_h=6$ the 90% Confidence band is `r round(EYh-W*sYh, digits=4)`<`r round(EYh, digits=4)`<`r round(EYh+W*sYh, digits=4)`
@@ -486,10 +486,10 @@ The 90% Confidence band is wider than it is in part (a) because the confidence b
 
 Because we are estimating *mean* breakage, rather than *predicted* breakage, I will use the following formulas:
 
-$E\{\hat{Y_h}\}=\beta_0+\beta_1X_h\\
-s^2\{\hat{Y_h}\}=MSE \left [ \frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
-s\{\hat{Y_h}\}=sqrt(s^2\{\hat{Y_h}\})\\
-\textrm{Confidence Interval for }E\{\hat{Y_h}\}:  \hat{Y_h} \pm t(1-\frac{\alpha}{2}; n-2)s\{\hat{Y_h}\}$
+$\hat{Y}_h=\beta_0+\beta_1X_h\\
+s^2\{\hat{Y}_h\}=MSE \left [ \frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
+s\{\hat{Y}_h\}=sqrt(s^2\{\hat{Y}_h\})\\
+\textrm{Confidence Interval for }\hat{Y}_h:  \hat{Y}_h \pm t(1-\frac{\alpha}{2}; n-2)s\{\hat{Y}_h\}$
 
 ```{r}
 df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
@@ -507,21 +507,21 @@ EY4<-round(B0+B1*4, digits = 4)
 t<-qt(1-(.01/2),n-2)
 ```
 
-$E\{\hat{Y_{X=2}}\}=$ `r EY2`
+$\hat{Y}_{X=2}=$ `r EY2`
 The 99% Confidence Interval is `r EY2-t*sy2` < `r EY2` < `r EY2+t*sy2` 
 
-$E\{\hat{Y_{X=4}}\}=$ `r EY4`
+$\hat{Y}_{X=4}=$ `r EY4`
 The 99% Confidence Interval is `r EY4-t*sy4` < `r EY4` < `r EY4+t*sy4` 
 
-The Confidence Intervals around $E\{\hat{Y}\}$ should be narrowest when $X_h=\bar{X}$.  In this case, $\bar{X}=1$ and since X=2 is closer to $\bar{X}$ than X=4, the confience interval should be narrower at X=2 than at X=4.
+The Confidence Intervals around $\hat{Y}$ should be narrowest when $X_h=\bar{X}$.  In this case, $\bar{X}=1$ and since X=2 is closer to $\bar{X}$ than X=4, the confience interval should be narrower at X=2 than at X=4.
 
 
 ### b. The next shipment will entail two transfers.  Obtain a 99 percent prediction interval for the number of broken ampules for this shipment.  Interpret your prediction interval.
 
 Because we are estimating *predicted* values, I will use the following formulas:
 
-$s^2\{pred\}=MSE+s^2\{\hat{Y_h}\}=MSE \left [ 1+\frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
-\textrm{Confidence Interval for }Y_{h: predicted}: \hat{Y_h}\pm t(1-\frac{\alpha}{2};n-2)s\{pred\}\\$
+$s^2\{pred\}=MSE+s^2\{\hat{Y}_h\}=MSE \left [ 1+\frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
+\textrm{Confidence Interval for }Y_{h: predicted}: \hat{Y}_h\pm t(1-\frac{\alpha}{2};n-2)s\{pred\}\\$
 
 ```{r}
 df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
@@ -546,8 +546,8 @@ The Confidence Interval for prediction is larger than the Confidence Interval fo
 
 Because the question is asking for mean prediction values, I will use the formulas:
 
-$\textrm{Confidence Interval for }Y_{h: predicted}: \hat{Y_h}\pm t(1-\frac{\alpha}{2};n-2)s\{predmean\}\\
-s^2\{predmean\}=\frac{MSE}{m}+s^2\{\hat{Y_h}\}=MSE\left [\frac{1}{m}+\frac{1}{n}+\frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}\right ]\\$
+$\textrm{Confidence Interval for }Y_{h: predicted}: \hat{Y}_h\pm t(1-\frac{\alpha}{2};n-2)s\{predmean\}\\
+s^2\{predmean\}=\frac{MSE}{m}+s^2\{\hat{Y}_h\}=MSE\left [\frac{1}{m}+\frac{1}{n}+\frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}\right ]\\$
 
 ```{r}
 df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
@@ -573,7 +573,7 @@ The 99% prediction interval for the total number of ampules broken in the three 
 
 Because the question asks for boundary values of the confidence band, I will use the formulas 
 
-$\hat{Y_h} \pm Ws\{\hat{Y_h}\}\\
+$\hat{Y}_h \pm Ws\{\hat{Y}_h\}\\
 W^2=2F(1-\alpha;2,n-2)\\$
 
 ```{r}
@@ -866,10 +866,10 @@ The 95% Confidence for $\beta_1$ is:  `r lb` $\leq$ `r B1` $\leq$ `r up`
 
 Because we are asked to estimate the *mean* muscle mass, I will use the following formulas:
 
-$E\{\hat{Y_h}\}=\beta_0+\beta_1X_h\\
-s^2\{\hat{Y_h}\}=MSE \left [ \frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
-s\{\hat{Y_h}\}=\sqrt{(s^2\{\hat{Y_h}\})}\\
-\textrm{Confidence Interval for }E\{\hat{Y_h}\}:  \hat{Y_h} \pm t(1-\frac{\alpha}{2}; n-2)s\{\hat{Y_h}\}$
+$\hat{Y}_h=\beta_0+\beta_1X_h\\
+s^2\{\hat{Y}_h\}=MSE \left [ \frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
+s\{\hat{Y}_h\}=\sqrt{(s^2\{\hat{Y}_h\})}\\
+\textrm{Confidence Interval for }\hat{Y}_h:  \hat{Y}_h \pm t(1-\frac{\alpha}{2}; n-2)s\{\hat{Y}_h\}$
 
 ```{r}
 df27<-read.table("CH01PR27.txt", col.names=c("Y","X"))     
@@ -885,7 +885,7 @@ EY60<-round(B0+B1*60, digits = 4)
 t<-qt(1-(a/2),n-2)
 ```
  
-$E\{\hat{Y}_{X=60}\}=$ `r EY60`
+$\hat{Y}_{X=60}=$ `r EY60`
 
 The 95% Confidence Interval is `r EY60-t*sy60` < `r EY60` < `r EY60+t*sy60` 
 
@@ -898,8 +898,8 @@ Becasue $X=60$ is so close to $\bar{X}$, I expect that the confidence interval a
 
 Because we are asked to estimate *predicted* values, I will use the following formulas:
 
-$s^2\{pred\}=MSE+s^2\{\hat{Y_h}\}=MSE \left [ 1+\frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
-\textrm{Confidence Interval for }Y_{h: predicted}: \hat{Y_h}\pm t(1-\frac{\alpha}{2};n-2)s\{pred\}\\$
+$s^2\{pred\}=MSE+s^2\{\hat{Y}_h\}=MSE \left [ 1+\frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
+\textrm{Confidence Interval for }Y_{h: predicted}: \hat{Y}_h\pm t(1-\frac{\alpha}{2};n-2)s\{pred\}\\$
 
 ```{r}
 df27<-read.table("CH01PR27.txt", col.names=c("Y","X"))     
@@ -915,7 +915,7 @@ EY60<-round(B0+B1*60, digits = 4)
 t<-qt(1-(a/2),n-2)
 ```
  
-$E\{\hat{Y}_{X=60}\}=$ `r EY60`
+$\hat{Y}_{X=60}=$ `r EY60`
 
 $s\{pred\}=$ `r sy60`
 
@@ -929,7 +929,7 @@ The 95% CI for predicted values is much larger than for mean values, because the
 
 Because the question asks for boundary values of the confidence band, I will use the formulas 
 
-$\hat{Y_h} \pm Ws\{\hat{Y_h}\}\\
+$\hat{Y}_h \pm Ws\{\hat{Y}_h\}\\
 W^2=2F(1-\alpha;2,n-2)\\$
 
 ```{r}
