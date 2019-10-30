@@ -200,7 +200,7 @@ ggplot(data=df27, aes(x=X, y=Y)) +
      geom_smooth(method='lm')
 ```
 
-$\hat{Y}$=`r m27$coefficients[1]`+`r m27$coefficients[2]`X
+$\hat{Y}$=`r m27$coefficients[1]` `r m27$coefficients[2]`X
 
 ### b. Obtain the following:
 
@@ -214,7 +214,7 @@ $\hat{Y}_{X=60}=$ `r m27$coefficients[1]+(m27$coefficients[2]*60)`
 
 #### 3. the value of the residual for the eighth case
 
-$e_8=$ `r m27$residuals[8]`
+$\epsilon_8=$ `r m27$residuals[8]`
 
 #### 4. a point estimate of $\sigma^2$
 
