@@ -1,5 +1,5 @@
 ---
-title: "Applied Linear Statistical Models - Chapter 2"
+title: "Applied Linear Statistical Models"
 author: "Ed Young"
 date: "8/27/2019"
 output:
@@ -10,56 +10,82 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, cache=TRUE)
+knitr::opts_chunk$set(echo = TRUE, cache=TRUE, warning=FALSE, message=FALSE)
+```
+
+<!-- Load Libraries and Data -->
+```{r, include=FALSE}
 library(tidyverse)
-library(pwr)
-library(jtools)
+library(broom)
 library(latex2exp)
 library(data.table)
+library(ggfortify)
+library(randtests)
+library(MASS)
+library(lmtest)
+
+df20<-fread("http://users.stat.ufl.edu/~rrandles/sta4210/Rclassnotes/data/textdatasets/KutnerData/Chapter%20%201%20Data%20Sets/CH01PR20.txt", col.names=c("Y","X"))
+df21<-fread("http://users.stat.ufl.edu/~rrandles/sta4210/Rclassnotes/data/textdatasets/KutnerData/Chapter%20%201%20Data%20Sets/CH01PR21.txt", col.names=c("Y","X"))
+df27<-fread("http://users.stat.ufl.edu/~rrandles/sta4210/Rclassnotes/data/textdatasets/KutnerData/Chapter%20%201%20Data%20Sets/CH01PR27.txt", col.names=c("Y","X"))
 ```
+
+# Chapter 2
+
 ## Useful Formulas
 
 ****
 
 <span style="display:block" id="note"> Estimation of $b_1$ </span>
 
+<span style="display:block" id="math">
 $\sigma^2\{b_1\}=\frac{\sigma^2}{\sum(X_i-\bar{X})^2}\\
 s^2=MSE=\frac{SSE}{n-2}=\frac{\sum\epsilon_i^2}{n-2}\\
 s^2\{b_1\}=\frac{MSE}{\sum(X_i-\bar{X})^2}; s\{b_1\}=\sqrt{(\frac{MSE}{\sum(X_i-\bar{X})^2})}\\
 b_1\pm t(1-\alpha/2; n-2)s\{b_1\}\\
 H_0: \beta_1=\beta_{10}\\
 H_1: \beta_1 \neq \beta_{10}\\$
+</span>
 
 <span style="display:block" id="note">Note that if $\beta_{10}=0$ then this formula simplifies to $t^*=\frac{b_1}{s\{b_1\}}$ </span>
 
+<span style="display:block" id="math">
 $\quad t^*=\frac{b_1-\beta_{10}}{s\{b_1\}}\\
 \quad \textrm{If } |t^*| \leq t(1-\frac{\alpha}{2};n-2) \textrm{, conclude } H_0\\
 \quad \textrm{If } |t^*| > t(1-\frac{\alpha}{2};n-2) \textrm{, conclude } H_a\\$
+</span>
 
 ****
 
+<span style="display:block" id="math">
 $P-Value: Probability_{(T)}\{|t^*|>|value|\}=2t(-|t^*|, df)\\
 Power= Probability\{|t^*| > t(1-\frac{\alpha}{2};n-2|\delta)\}\\$
+</span>
 
 ****
 
 <span style="display:block" id="note">Estimation of $b_0$ </span>
 
+<span style="display:block" id="math">
 $s^2\{b_0\}=MSE\left [\frac{1}{n}+\frac{\bar{X}^2}{\sum(X_i-\bar{X})^2} \right ]\\
 \frac{b_0-\beta_0}{s\{b_0\}}t(n-2)\\
 b_0\pm t(1-\alpha/2; n-2)s\{b_0\}\\$
+</span>
 
 ****
 
 <span style="display:block" id="note">Estimation of $\{\hat{Y_h}\}$ </span>
 
+<span style="display:block" id="math">
 $E\{\hat{Y_h}\}=\beta_0+\beta_1X_h\\$
+</span>
 
 <span style="display:block" id="note">Note: The variance of $\hat{Y_h}$ is smallest when $X_h=\bar{X}$ </span>
 
+<span style="display:block" id="math">
 $\sigma^2\{\hat{Y_h}\}=\sigma^2 \left [ \frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
 s^2\{\hat{Y_h}\}=MSE \left [ \frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
 \textrm{Confidence Interval for }E\{\hat{Y_h}\}:  \hat{Y_h} \pm t(1-\frac{\alpha}{2}; n-2)s\{\hat{Y_h}\}$
+</span>
 
 ****
 
@@ -69,8 +95,10 @@ s^2\{\hat{Y_h}\}=MSE \left [ \frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X
 <span style="display:block" id="note">2. Given the mean of Y - </span>
 <span style="display:block" id="note">Variation within the probability distribution of Y</span>
 
+<span style="display:block" id="math">
 $s^2\{pred\}=MSE+s^2\{\hat{Y_h}\}=MSE \left [ 1+\frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}  \right ]\\
 \textrm{Confidence Interval for }Y_{h: predicted}: \hat{Y_h}\pm t(1-\frac{\alpha}{2};n-2)s\{pred\}\\$
+</span>
 
 ****
 
@@ -79,20 +107,25 @@ $s^2\{pred\}=MSE+s^2\{\hat{Y_h}\}=MSE \left [ 1+\frac{1}{n}+ \frac{(X_h-\bar{X})
 <span style="display:block" id="note">1. the variance of the mean $\bar{Y}$</span>
 <span style="display:block" id="note">2. the variance of the sampling distirubtion $\hat{Y_h}$</span>
 
+<span style="display:block" id="math">
 $\textrm{Confidence Interval for }Y_{h: predicted mean}: \hat{Y_h}\pm t(1-\frac{\alpha}{2};n-2)s\{predmean\}\\
 s^2\{predmean\}=\frac{MSE}{m}+s^2\{\hat{Y_h}\}=MSE\left [\frac{1}{m}+\frac{1}{n}+\frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}\right ]\\$
+</span>
 
 ****
 
 <span style="display:block" id="note">Confidence Band for Regression Line</span>
 
+<span style="display:block" id="math">
 $\hat{Y_h} \pm Ws\{\hat{Y_h}\}\\
 W^2=2F(1-\alpha;2,n-2)\\$
+</span>
 
 ****
 
 <span style="display:block" id="note">Analysis of Variance approach to Regression</span>
 
+<span style="display:block" id="math">
 $SSTO=\sum(Y_i-\bar{Y})^2\\
 SSE=\sum(Y_i-\hat{Y_i})^2\\
 SSR=\sum(\hat{Y_i}-\bar{Y})^2=\beta_1^2\sum(X_i-\bar{X})^2\\
@@ -105,17 +138,21 @@ F^*=\frac{MSR}{MSE}\\
 \textrm{Desicion Rule:}\\
 \quad \textrm{if }F^* \leq F(1-\alpha;1,n-2) \textrm{; conclude }H_0\\
 \quad \textrm{if }F^* > F(1-\alpha;1,n-2) \textrm{; conclude }H_a$
+</span>
 
 ****
 
 <span style="display:block" id="note">Coefficient of Determination and Coefficient of Correlation</span>
 
+<span style="display:block" id="math">
 $R^2=\frac{SSR}{SSTO}=1-\frac{SSE}{SSTO}\\$
+</span>
 
 <span style="display:block" id="note">The $\pm$ is according to whether he slope of the fitted regression line is positive or negative</span>
 
+<span style="display:block" id="math">
 $r= \pm \sqrt{R^2}$
-
+</span>
 ****
  
 ## (Problem 2.5) Refer to **Copier maintenance** Problem 1.20
