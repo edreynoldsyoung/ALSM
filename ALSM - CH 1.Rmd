@@ -1,5 +1,5 @@
 ---
-title: "Applied Linear Statistical Models - Chapter 1"
+title: "Applied Linear Statistical Models"
 author: "Ed Young"
 date: "8/26/2019"
 output:
