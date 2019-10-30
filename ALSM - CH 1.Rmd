@@ -75,13 +75,13 @@ Note the high variance.  It should be tested whether a linear regression figure 
 ### c. Obtain a point estimate of the mean freshman GPA for sutdents with ACT text score X=30.
 
 ```{r}
-mean(df19$X[df19$X==30])
+m19$coefficients[1] + m19$coefficients[2]*30
 ```
 
 ### d. What is the point estimate of the change in the mean response when the entrance test score increase by one point?
 
 ```{r}
-mean(df19$X[df19$X==31])-mean(df19$X[df19$X==30])
+m19$coefficients[2]
 ```
 
 
@@ -113,7 +113,7 @@ $\beta_0$ represents the amount of time it would take to repair 0 machines.  Tha
 ### d. Obtain a point estimate of the mean service time when X=5 copiers are serviced.
 
 ```{r}
-mean(df20$Y[df20$X==5])
+m20$coefficients[1] + m20$coefficients[2]*5
 ```
 
 ## (Problem 1.21) Airfreight breakage
@@ -143,11 +143,9 @@ $\hat{Y}$= `r m21$coefficient[1]` + `r m21$coefficient[2]`(X)
 
 `r m21$coefficient[2]`
 
-### d.  Verify that your fitted regression line goes through the point $(\hat{X}, \hat{Y})$
+### d.  Verify that your fitted regression line goes through the point $(\bar{X}, \bar{Y})$
 
- $(\hat{X}, \hat{Y})=($  `r mean(df21$X)` , `r mean(df21$Y)`  $)$
- 
- `r (m21$coefficients[1])+(m21$coefficients[2]*mean(df21$X))`
+$(\bar{X}, \bar{Y})=($  `r mean(df21$X)` , `r mean(df21$Y)`  $)$
 
 
 ## (Problem 1.24) Refer to Copier maintenance Problem 1.20
@@ -208,16 +206,16 @@ $\hat{Y}$=`r m27$coefficients[1]`+`r m27$coefficients[2]`X
 
 #### 1. a point estimate of the difference in the mean muscle mass for women differing in age by one year
 
-`r m27$coefficients[2]`
+$b_1=$ `r m27$coefficients[2]`
 
 #### 2. a point estimate of the mean muscle mass for women aged X=60 years
 
-`r m27$coefficients[1]+(m27$coefficients[2]*60)`
+$\hat{Y}_{X=60}=$ `r m27$coefficients[1]+(m27$coefficients[2]*60)`
 
 #### 3. the value of the residual for the eighth case
 
-`r m27$residuals[8]`
+$e_8=$ `r m27$residuals[8]`
 
 #### 4. a point estimate of $\sigma^2$
 
-`r sum((m27$residuals)^2)/(length(m27$residuals)-2)`
+$\sigma^2=MSE=$ `r sum((m27$residuals)^2)/(length(m27$residuals)-2)`
