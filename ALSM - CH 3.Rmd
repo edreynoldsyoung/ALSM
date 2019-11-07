@@ -207,6 +207,12 @@ $\quad H_0: \gamma_1=0\\
 
 ****
 
+### Lack-of-Fit Test
+
+<span style="display:block" id="math">
+$\sum_{i}\sum_{1\le j \le n_i}(Y_{ij}-\hat{Y}_i)^2=\sum_{i}\sum_{1 \le j \le n_i}(Y_{ij}-\bar{Y}_i)^2 + \sum_{i}n_i(\bar{Y}_i - \hat{Y}_i)^2$
+</span>
+
 ## (Problem 3.4) 
 
 Refer to **Copier maintenance** Problem 1.20

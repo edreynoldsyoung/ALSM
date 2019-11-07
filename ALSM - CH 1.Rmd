@@ -54,7 +54,7 @@ t19<-augment(m19)
 
 The director of admissions of a small college selected 120 students at random from the new freshman class in a study to determine whether a student's grade point average at the end of the freshman year can be predicted from the ACT test score.  Use the data provided and a assume a first-order regression model is appropriate.
 
-### a. Obtain the least squares estimates of $\beta_0 \textrm{ and } \beta_1$ and state the estimated regression function.
+### Obtain the least squares estimates of $\beta_0 \textrm{ and } \beta_1$ and state the estimated regression function.
 
 ```{r}
 m19$coefficients[1]
@@ -62,7 +62,7 @@ m19$coefficients[2]
 ```
 $\hat{Y}=$ `r m19$coefficients[1]` + `r m19$coefficients[2]`(X)
 
-### b. Plot the estimated regression function and the data.  Does the estimated regression function appear to fit the data well?
+###  Plot the estimated regression function and the data.  Does the estimated regression function appear to fit the data well?
 
 ```{r}
 ggplot(data=df19, aes(x=X, y=Y)) +
@@ -72,13 +72,13 @@ ggplot(data=df19, aes(x=X, y=Y)) +
 
 Note the high variance.  It should be tested whether a linear regression figure is the best match.
 
-### c. Obtain a point estimate of the mean freshman GPA for sutdents with ACT text score X=30.
+###  Obtain a point estimate of the mean freshman GPA for sutdents with ACT text score X=30.
 
 ```{r}
 m19$coefficients[1] + m19$coefficients[2]*30
 ```
 
-### d. What is the point estimate of the change in the mean response when the entrance test score increase by one point?
+###  What is the point estimate of the change in the mean response when the entrance test score increase by one point?
 
 ```{r}
 m19$coefficients[2]
@@ -94,11 +94,11 @@ t20<-augment(m20)
 
 The tri-City Office Equipment Corporation sells an imported copier on a fanchise basis and performs preventive maintenance and repair service on this copier.  The data below have been collected from 45 recent calls on users to perform routine preventive maintnance service:  for each call, X is the number of copiers serviced and Y is the total number of minutes spent by the service person.  Assume that first-order regression model is appropriate.
 
-### a. Obain the estimated regression function
+### Obain the estimated regression function
 
 $\hat{Y}$= `r m20$coefficient[1]` + `r m20$coefficient[2]`(X)
 
-### b. Plot the estimates regression function and the data.  How well does the estimated regression funtion fit the data?
+###  Plot the estimates regression function and the data.  How well does the estimated regression funtion fit the data?
 
 ```{r}
 ggplot(data=df20, aes(x=X, y=Y)) +
@@ -106,11 +106,11 @@ ggplot(data=df20, aes(x=X, y=Y)) +
      geom_smooth(method='lm')
 ```
 
-### c. Interpret $\beta_0$ in your estimated regression function.  Does $\beta_0$ provide any relevant information here?  explain.
+###  Interpret $\beta_0$ in your estimated regression function.  Does $\beta_0$ provide any relevant information here?  explain.
 
 $\beta_0$ represents the amount of time it would take to repair 0 machines.  That has no meaning, since a negative time value has no meaning.
 
-### d. Obtain a point estimate of the mean service time when X=5 copiers are serviced.
+###  Obtain a point estimate of the mean service time when X=5 copiers are serviced.
 
 ```{r}
 m20$coefficients[1] + m20$coefficients[2]*5
@@ -125,7 +125,7 @@ t21<-augment(m21)
 
 A substance used in biological and medical research is shipped by airfreight to users in cartons of 1.000 ampules.  The data, involving 10 shipments, were collected on the number of times the carton was transferred from one aircraft to another over the shipment route (X) and the number of ampules found to be broken upon arrival (Y).  Assume that first-order regression model is appropriate.
 
-### a. Obtain the estimated regression function.  Plot the estimated regression function and the data.
+### Obtain the estimated regression function.  Plot the estimated regression function and the data.
 
 ```{r}
 ggplot(data=df21, aes(x=X, y=Y)) +
@@ -135,22 +135,22 @@ ggplot(data=df21, aes(x=X, y=Y)) +
 
 $\hat{Y}$= `r m21$coefficient[1]` + `r m21$coefficient[2]`(X)
 
-### b. Obtain a point estimate of the expected number of broken ampules when X=1 transfer is made
+###  Obtain a point estimate of the expected number of broken ampules when X=1 transfer is made
 
 `r m21$coefficient[1]+m21$coefficient[2]`
 
-### c.  Estimate the increase in the expected number of ampules broken when there are 2 transfers as compared to 1 transfer.
+###   Estimate the increase in the expected number of ampules broken when there are 2 transfers as compared to 1 transfer.
 
 `r m21$coefficient[2]`
 
-### d.  Verify that your fitted regression line goes through the point $(\bar{X}, \bar{Y})$
+###   Verify that your fitted regression line goes through the point $(\bar{X}, \bar{Y})$
 
 $(\bar{X}, \bar{Y})=($  `r mean(df21$X)` , `r mean(df21$Y)`  $)$
 
 
 ## (Problem 1.24) Refer to Copier maintenance Problem 1.20
 
-### a. Obtain the residuals $e_i$ and the sum of the squared residuals $\sum(e_i^2)$.  What is the relation between the sum of the squared residuals here and the quantity $Q$ in $Q=\sum_{i=1}^{n} (Y_i-\beta_0-\beta_1X_i)^2$?
+### Obtain the residuals $e_i$ and the sum of the squared residuals $\sum(e_i^2)$.  What is the relation between the sum of the squared residuals here and the quantity $Q$ in $Q=\sum_{i=1}^{n} (Y_i-\beta_0-\beta_1X_i)^2$?
 
 ```{r}
 m20$residuals
@@ -160,7 +160,7 @@ sum((df20$Y-m20$coefficients[1]-m20$coefficients[2]*df20$X)^2)
 
 They are the same.
 
-### b.  Obtain point estimates of $\sigma^2$ and $\sigma$.  In what units is $\sigma$ expressed?
+###   Obtain point estimates of $\sigma^2$ and $\sigma$.  In what units is $\sigma$ expressed?
 
 `r sum((m20$residuals)^2)/(length(m20$residuals)-2)`
 
@@ -168,14 +168,14 @@ They are the same.
 
 ## (Problem 1.25) Refer to Airfreight breakage Prolem 1.21
 
-### a. Obtain the residual for the first case.  What is its relation $\epsilon_1$?
+### Obtain the residual for the first case.  What is its relation $\epsilon_1$?
 
 ```{r}
 m21$residuals[1]
 ```
 
 
-### b. Compute $\sum \epsilon_i^2$ and $MSE$.  What is estimated by $MSE$?
+###  Compute $\sum \epsilon_i^2$ and $MSE$.  What is estimated by $MSE$?
 
 $\sum \epsilon_i^2$=`r sum((m21$residuals)^2)`
 
@@ -192,7 +192,7 @@ t27<-augment(m27)
 
 A person's muscle mass is expected to decrease with age.  To explore this relationship in women, a nutritionist randomly selected 15 women from each 10-year age group, beginning with age 40 and ending with age 79.  The results follow:  X is age, and Y is a measure of muscle mass.  Assume that first-order regression model is appropriate.
 
-### a.  Obtain the estimated regression function.  Plot the estimated regression function and the data.  Does a linear regression function appear to give a good fit here?  Does your plot support the anticipation that muscle mass decreases with age?
+###  Obtain the estimated regression function.  Plot the estimated regression function and the data.  Does a linear regression function appear to give a good fit here?  Does your plot support the anticipation that muscle mass decreases with age?
 
 ```{r}
 ggplot(data=df27, aes(x=X, y=Y)) +
@@ -202,7 +202,7 @@ ggplot(data=df27, aes(x=X, y=Y)) +
 
 $\hat{Y}$=`r m27$coefficients[1]` `r m27$coefficients[2]`X
 
-### b. Obtain the following:
+###  Obtain the following:
 
 #### 1. a point estimate of the difference in the mean muscle mass for women differing in age by one year
 

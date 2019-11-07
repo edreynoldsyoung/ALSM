@@ -35,19 +35,18 @@ df27<-fread("http://users.stat.ufl.edu/~rrandles/sta4210/Rclassnotes/data/textda
 
 ****
 
-<span style="display:block" id="note"> Estimation of $b_1$ </span>
+### Estimation of $b_1$ 
 
 <span style="display:block" id="math">
 $\sigma^2\{b_1\}=\frac{\sigma^2}{\sum(X_i-\bar{X})^2}\\
 s^2=MSE=\frac{SSE}{n-2}=\frac{\sum\epsilon_i^2}{n-2}\\
 s^2\{b_1\}=\frac{MSE}{\sum(X_i-\bar{X})^2}; s\{b_1\}=\sqrt{(\frac{MSE}{\sum(X_i-\bar{X})^2})}\\
 b_1\pm t(1-\alpha/2; n-2)s\{b_1\}\\
-H_0: \beta_1=\beta_{10}\\
-H_1: \beta_1 \neq \beta_{10}\\$
+\textrm{Decision Rule:}\\
+\quad H_0: \beta_1=\beta_{10}\\
+\quad H_1: \beta_1 \neq \beta_{10}\\$
 </span>
-
 <span style="display:block" id="note">Note that if $\beta_{10}=0$ then this formula simplifies to $t^*=\frac{b_1}{s\{b_1\}}$ </span>
-
 <span style="display:block" id="math">
 $\quad t^*=\frac{b_1-\beta_{10}}{s\{b_1\}}\\
 \quad \textrm{If } |t^*| \leq t(1-\frac{\alpha}{2};n-2) \textrm{, conclude } H_0\\
@@ -56,6 +55,8 @@ $\quad t^*=\frac{b_1-\beta_{10}}{s\{b_1\}}\\
 
 ****
 
+### P-Value
+
 <span style="display:block" id="math">
 $P-Value: Probability_{(T)}\{|t^*|>|value|\}=2t(-|t^*|, df)\\
 Power= Probability\{|t^*| > t(1-\frac{\alpha}{2};n-2|\delta)\}\\$
@@ -63,7 +64,7 @@ Power= Probability\{|t^*| > t(1-\frac{\alpha}{2};n-2|\delta)\}\\$
 
 ****
 
-<span style="display:block" id="note">Estimation of $b_0$ </span>
+### Estimation of $b_0$ 
 
 <span style="display:block" id="math">
 $s^2\{b_0\}=MSE\left [\frac{1}{n}+\frac{\bar{X}^2}{\sum(X_i-\bar{X})^2} \right ]\\
@@ -73,7 +74,7 @@ b_0\pm t(1-\alpha/2; n-2)s\{b_0\}\\$
 
 ****
 
-<span style="display:block" id="note">Estimation of $\{\hat{Y}_h\}$ </span>
+### Estimation of $\{\hat{Y}_h\}$ 
 
 <span style="display:block" id="math">
 $\hat{Y}_h=\beta_0+\beta_1X_h\\$
@@ -89,7 +90,8 @@ s^2\{\hat{Y}_h\}=MSE \left [ \frac{1}{n}+ \frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X
 
 ****
 
-<span style="display:block" id="note">Estimation of Predicted Outcome</span>
+### Estimation of Predicted Outcome 
+
 <span style="display:block" id="note">Note that the variance of a predicted outcome:</span>
 <span style="display:block" id="note">1. Variation in possible mean Y</span>
 <span style="display:block" id="note">2. Given the mean of Y - </span>
@@ -102,7 +104,8 @@ $s^2\{pred\}=MSE+s^2\{\hat{Y}_h\}=MSE \left [ 1+\frac{1}{n}+ \frac{(X_h-\bar{X})
 
 ****
 
-<span style="display:block" id="note">Prediction of Mean of M New Observations for Given $X_h$</span>
+### Prediction of Mean of M New Observations for Given $X_h$
+
 <span style="display:block" id="note">Note: variance of $s^2\{predmean\}$ has two components:</span>
 <span style="display:block" id="note">1. the variance of the mean $\bar{Y}$</span>
 <span style="display:block" id="note">2. the variance of the sampling distirubtion $\hat{Y}_h$</span>
@@ -114,7 +117,7 @@ s^2\{predmean\}=\frac{MSE}{m}+s^2\{\hat{Y}_h\}=MSE\left [\frac{1}{m}+\frac{1}{n}
 
 ****
 
-<span style="display:block" id="note">Confidence Band for Regression Line</span>
+### Confidence Band for Regression Line
 
 <span style="display:block" id="math">
 $\hat{Y}_h \pm Ws\{\hat{Y}_h\}\\
@@ -123,7 +126,7 @@ W^2=2F(1-\alpha;2,n-2)\\$
 
 ****
 
-<span style="display:block" id="note">Analysis of Variance approach to Regression</span>
+### Analysis of Variance approach to Regression
 
 <span style="display:block" id="math">
 $SSTO=\sum(Y_i-\bar{Y})^2\\
@@ -134,15 +137,15 @@ MSR=\frac{SSR}{1}\\
 MSE=\frac{SSE}{n-2}
 E\{MSE\}=\sigma^2\\
 E\{MSR\}=\sigma^2+\beta_1^2\sum(X_i-\bar{X})^2\\
-F^*=\frac{MSR}{MSE}\\
 \textrm{Desicion Rule:}\\
+\quad F^*=\frac{MSR}{MSE}\\
 \quad \textrm{if }F^* \leq F(1-\alpha;1,n-2) \textrm{; conclude }H_0\\
 \quad \textrm{if }F^* > F(1-\alpha;1,n-2) \textrm{; conclude }H_a$
 </span>
 
 ****
 
-<span style="display:block" id="note">Coefficient of Determination and Coefficient of Correlation</span>
+### Coefficient of Determination and Coefficient of Correlation
 
 <span style="display:block" id="math">
 $R^2=\frac{SSR}{SSTO}=1-\frac{SSE}{SSTO}\\$
@@ -153,11 +156,12 @@ $R^2=\frac{SSR}{SSTO}=1-\frac{SSE}{SSTO}\\$
 <span style="display:block" id="math">
 $r= \pm \sqrt{R^2}$
 </span>
+
 ****
  
 ## (Problem 2.5) Refer to **Copier maintenance** Problem 1.20
 
-### a. Estimate the change in the mean service time when the number of copiers serviced increases by one.  Use a 90 percent confidence interval.  Interpret your confidence interval.
+###  Estimate the change in the mean service time when the number of copiers serviced increases by one.  Use a 90 percent confidence interval.  Interpret your confidence interval.
 
 ```{r}
 df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
@@ -174,7 +178,7 @@ up<-B1+t*sb1
 
 change in the mean service time when the number of copiers serviced increases by one `r lb` $\leq$ `r B1` $\leq$ `r up`
 
-### b. Conduct a t test to determine whether or not there is a linear association between X and Y here; control for $\alpha$ risk at .10.  State the alternatives, decision rule, and conclusion.  What is the P-value of your test?
+###  Conduct a t test to determine whether or not there is a linear association between X and Y here; control for $\alpha$ risk at .10.  State the alternatives, decision rule, and conclusion.  What is the P-value of your test?
 
 
 ```{r}
@@ -207,11 +211,11 @@ Since $t^*>t(.95, 43)$, we conclude $H_a$, that $\beta_1 \neq 0$ or that there i
 
 The P-Value is `r p`
 
-### c. Are our results in parts (a) and (b) consistent?  Explain.
+###  Are our results in parts (a) and (b) consistent?  Explain.
 
 Yes - since the confidence interval for the slope does not include 0.
 
-### d. The manufacturer has suggested that the mean required time should not increase by more than 14 minutes for each additional copier that is serviced on a service call.  Conduct a test to decide whether this standard is being satisfied by Tr-City.  Control the risk of a Type 1 error at .05.  State the alternatives, decidion rule, and conclusion.  What is the P-value of the test?
+###  The manufacturer has suggested that the mean required time should not increase by more than 14 minutes for each additional copier that is serviced on a service call.  Conduct a test to decide whether this standard is being satisfied by Tr-City.  Control the risk of a Type 1 error at .05.  State the alternatives, decidion rule, and conclusion.  What is the P-value of the test?
 
 ```{r}
 df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
@@ -250,7 +254,7 @@ The intercept, $b_0$ is negative, which does not have meaning regarding time.  H
 
 ## (Problem 2.6) Refer to **Airfreight breakage** Problem 1.21.
 
-### a.  Estimate $\beta_1$ with a 95 percent confidence interval.  Interpret your interval estimate.
+###   Estimate $\beta_1$ with a 95 percent confidence interval.  Interpret your interval estimate.
 
 ```{r}
 df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
@@ -267,7 +271,7 @@ up<-B1+t*sb1
 
 $\beta_1$: `r lb` $\leq$ `r B1` $\leq$ `r up`
 
-### b. Conduct a $t$ test to decide whether or not there is a linear association between number of times a carton is transferred (X) and number of broken ampules (Y).  Us a level of significance of .05.  State the alternatives, decision rule, and conclusion.  What is the P-value of the test?
+###  Conduct a $t$ test to decide whether or not there is a linear association between number of times a carton is transferred (X) and number of broken ampules (Y).  Us a level of significance of .05.  State the alternatives, decision rule, and conclusion.  What is the P-value of the test?
 
 
 ```{r}
@@ -302,7 +306,7 @@ Since $t^*>t(.975, 43)$, we conclude $H_a$, that $\beta_1 \neq 0$ or that there 
 The P-Value is `r p`
 
 
-### c. $\beta_0$ represents here the mean number of ampules broken when no transfers of the shipment are made - i.e., when X=0.  Obtain a 95 percent conficence interval for $\beta_0$ and interpret it.
+###  $\beta_0$ represents here the mean number of ampules broken when no transfers of the shipment are made - i.e., when X=0.  Obtain a 95 percent conficence interval for $\beta_0$ and interpret it.
 
 ```{r}
 df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
@@ -334,7 +338,7 @@ s\{\beta_0\}=\sqrt{s^2\{\beta_0\}}=\sqrt{0.44}=`r sb0`\\
 
 $\beta_0$:  `r lb` $\leq$ `r B0` $\leq$ `r ub`
 
-### d. A consultant has suggested, on the basis of previous experience, that the mean number of broken ampules should not exceed 9.0 when no transfers are made.  Conduct an appropriate test, useing $\alpha=.025$.  State the alternatives, decision rule, and conclusion.  What is the P-value of the test?
+###  A consultant has suggested, on the basis of previous experience, that the mean number of broken ampules should not exceed 9.0 when no transfers are made.  Conduct an appropriate test, useing $\alpha=.025$.  State the alternatives, decision rule, and conclusion.  What is the P-value of the test?
 
 ```{r}
 df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
@@ -367,7 +371,7 @@ The P-Value is `r p`
 
 Since $t^* \leq t(.9875, 8)$, we conclude $H_0$, that $\beta_0 \leq 9$.  This supports the hypothesis of the manager the mean number of broken ampules should not exceed 9.0 when no transfers are made.  The P-Value > 0.5, which means that the conclusion is not certain.  In addition, the interpretation of the intercept is uncertain since we cannot be certain that a linear regression model is appropriate when the scope of the model is extended to X=0. 
 
-### e. Obtain the power of your test in part (b) if actually $\beta_1=2.0$.  Assume $\sigma\{b_1\}=.50$  Also obtain the power of your test in part (d) if actually $\beta_0=11$.  Assume $\sigma\{b_0\}=.75$
+###  Obtain the power of your test in part (b) if actually $\beta_1=2.0$.  Assume $\sigma\{b_1\}=.50$  Also obtain the power of your test in part (d) if actually $\beta_0=11$.  Assume $\sigma\{b_0\}=.75$
 
 ```{r}
 pwr.t.test(d=(2-0)/.50, sig.level=0.05, n=45, type = "two.sample" )
@@ -376,7 +380,7 @@ pwr.t.test(d=(2-0)/.50, sig.level=0.05, n=45, type = "two.sample" )
 
 ## (Problem 2.14) Refer to **Copier maintenance** Problem 1.20
 
-### a. Obtain a 90 percent confidence interval for the mean service time on calls in which six copier are serviced.  Interpret your confidence interval.
+###  Obtain a 90 percent confidence interval for the mean service time on calls in which six copier are serviced.  Interpret your confidence interval.
 
 Because we are asked to estimate the *mean* service time, I will use the following formulas:
 
@@ -404,7 +408,7 @@ The 99% Confidence Interval is `r EY6-t*sy6` < `r EY6` < `r EY6+t*sy6`
 
 $\bar{X}=$ `r mean(df20$X)`
 
-### b. Obtain a 90 percent prediction interval for the service time on the next call in which six copiers are serviced.  Is your predication interval wider than the corresponding confidence interval in part (a)?  Should it be?
+###  Obtain a 90 percent prediction interval for the service time on the next call in which six copiers are serviced.  Is your predication interval wider than the corresponding confidence interval in part (a)?  Should it be?
 
 Because we are asked to estimate *predicted* values, I will use the following formulas:
 
@@ -432,7 +436,7 @@ The 99% Confidence Interval for the *predicted* service time for the next call i
 
 This Confidence Interval *predicted* service time should be wider than the Confidence Interval around the estimated *mean* service time, since the variance in the *predicted* time takes into account the possible variation in the *mean* estimate as well as the variation within the probability distrubion of the *predicted* time around the mean estimate.
 
-### c. Management wishes to estimate the expected service time per copier on calls in which six copiers are serviced.  Obtain an appropriate 90 percent confidence interval by convenerting the interval obtained in part (a).  Interpret the converted confidence interval.
+###  Management wishes to estimate the expected service time per copier on calls in which six copiers are serviced.  Obtain an appropriate 90 percent confidence interval by convenerting the interval obtained in part (a).  Interpret the converted confidence interval.
 
 ```{r}
 df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
@@ -454,7 +458,7 @@ $\hat{Y}_{X=6}=$ `r EY6/6`
 The 90% Confidence Interval is `r (EY6-t*sy6)/6` < `r EY6/6` < `r (EY6+t*sy6)/6` 
 
 
-### d. Determine the boundary values of the 90 percent confidence band for the regression line when $X_h=6$.  Is your confidence band wider at this point than the confidence interval in part (a)?  Should it be?
+###  Determine the boundary values of the 90 percent confidence band for the regression line when $X_h=6$.  Is your confidence band wider at this point than the confidence interval in part (a)?  Should it be?
 
 ```{r}
 df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
@@ -482,7 +486,7 @@ The 90% Confidence band is wider than it is in part (a) because the confidence b
 
 ## (Problem 2.15) Refer to **Airfreight breakage** Problem 1.21
 
-### a. Because of the changes in airline routes, shipments may have to be tranferred more frequently than in the past.  Estimate the mean breakage for the following numbers of transers:  X=2, 4.  Use separate 99 percent confidence intervals. Interpret your prediction interval.
+###  Because of the changes in airline routes, shipments may have to be tranferred more frequently than in the past.  Estimate the mean breakage for the following numbers of transers:  X=2, 4.  Use separate 99 percent confidence intervals. Interpret your prediction interval.
 
 Because we are estimating *mean* breakage, rather than *predicted* breakage, I will use the following formulas:
 
@@ -516,7 +520,7 @@ The 99% Confidence Interval is `r EY4-t*sy4` < `r EY4` < `r EY4+t*sy4`
 The Confidence Intervals around $\hat{Y}$ should be narrowest when $X_h=\bar{X}$.  In this case, $\bar{X}=1$ and since X=2 is closer to $\bar{X}$ than X=4, the confience interval should be narrower at X=2 than at X=4.
 
 
-### b. The next shipment will entail two transfers.  Obtain a 99 percent prediction interval for the number of broken ampules for this shipment.  Interpret your prediction interval.
+###  The next shipment will entail two transfers.  Obtain a 99 percent prediction interval for the number of broken ampules for this shipment.  Interpret your prediction interval.
 
 Because we are estimating *predicted* values, I will use the following formulas:
 
@@ -542,7 +546,7 @@ The 99% prediction interval is `r round(EYh-t*spred, digits=4)`<`r round(EYh, di
 
 The Confidence Interval for prediction is larger than the Confidence Interval for expected (mean) outcome, as it should be, since the CI for prediction must take into account not only the variance of the mean outcome, but also the variance in the probablity distrubion of Yh around the mean.
 
-### c. In the next several days, three independent shipments will be made, each entailing two transfers.  Obtain a 99 percent prediction interval for the mean number of ampules broken in the three shipments.  Convert this interval into a 99 percent prediction interval for the total number of ampules broken in the three shipments.
+###  In the next several days, three independent shipments will be made, each entailing two transfers.  Obtain a 99 percent prediction interval for the mean number of ampules broken in the three shipments.  Convert this interval into a 99 percent prediction interval for the total number of ampules broken in the three shipments.
 
 Because the question is asking for mean prediction values, I will use the formulas:
 
@@ -569,7 +573,7 @@ The 99% prediction interval for each shipment is `r round(EYh-t*spredmean, digit
 
 The 99% prediction interval for the total number of ampules broken in the three shipments is  `r round(3*(EYh-t*spredmean), digits=4)`<`r round(3*EYh, digits=4)`<`r round(3*(EYh+t*spredmean), digits=4)`
 
-### d. Determine the boundary values of the 99 percent confidence band for the regression line when $X_h=2$ and when $X_h=4$.  Is your confidence band wider at these two points than the corresponding confidence intervals in part (a)?  Should it be?
+###  Determine the boundary values of the 99 percent confidence band for the regression line when $X_h=2$ and when $X_h=4$.  Is your confidence band wider at these two points than the corresponding confidence intervals in part (a)?  Should it be?
 
 Because the question asks for boundary values of the confidence band, I will use the formulas 
 
@@ -606,7 +610,7 @@ The 99% Confidence band is wider than it is in part (a) because the confidence b
 
 ## (Problem 2.24) Refer to **Copier maintenance** Problem 1.20 
 
-### a. Set up the basic ANOVA table in the format of Table 2.2.  Which elements of your table are additive?  Also set up the ANOVA table in the format of Table 2.3.  How do the two table differ?
+###  Set up the basic ANOVA table in the format of Table 2.2.  Which elements of your table are additive?  Also set up the ANOVA table in the format of Table 2.3.  How do the two table differ?
 
 ```{r}
 df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
@@ -614,7 +618,7 @@ model120<-lm(Y~X,df20)
 anova(model120)
 ```
 
-### b. Conduct an F test to determine whether or not there is a linear association between time spent and number of copier serviced; use $\alpha=.10$.  State the alternatives, decision rule, and conclusion.
+###  Conduct an F test to determine whether or not there is a linear association between time spent and number of copier serviced; use $\alpha=.10$.  State the alternatives, decision rule, and conclusion.
 
 The questiopn is asking to use the F test from an ANOVA analysis.  I will use the formulas:
 
@@ -640,7 +644,7 @@ $F(1-\alpha;1,n-2)=$ `r round(F, digits=4)`
 
 Since `r round(anova120$'F value'[1], digits=4)` > `r round(F, digits=4)`, I conclude $H_a$, that $\beta_1 \neq 0$
 
-### c. By how much, relatively, is the total variation in number of minutes spent on a call reduced when the number of copiers serviced is introduced into the analysis?  Is this a relatively small or large reduction?  What is the name of this measure?
+###  By how much, relatively, is the total variation in number of minutes spent on a call reduced when the number of copiers serviced is introduced into the analysis?  Is this a relatively small or large reduction?  What is the name of this measure?
 
 The question is asking for the relative contribution of a predictor variable to the variation in the outcome variable.  This is measured by the Coefficient of Determination.  I will use the formulas
 
@@ -667,7 +671,7 @@ $SSTO=$ `r round(SSTO, digits=2)`
 
 $R^2=$ `r round(SSR/SSTO, digits=4)` 
 
-### d. Calculate r and attach the appropriate sign.
+###  Calculate r and attach the appropriate sign.
 
 ```{r}
 df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
@@ -689,13 +693,13 @@ Since $\beta_1>0$ r will have a positive sign
 
 $+$ `r r`
 
-### e. Which measure, r or R^2^, has the more clear-cut operational interpretation?
+###   Which measure, r or R^2^, has the more clear-cut operational interpretation?
 
 In this case, R^2^ has a more clear-cut operational interpretation, since X is a predictor variable.
 
 ## (Problem 2.25) Refer to **Airfreight breakage** Problem 1.21
 
-### a. Set up the ANOVA table.  Which elements are additive?
+###  Set up the ANOVA table.  Which elements are additive?
 
 ```{r}
 df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
@@ -705,7 +709,7 @@ anova(model121)
 
 The Sum Sq is additive, the Mean Sq is not.
 
-### b. Conduct an F test to decide whether or not there is a linear association between the number of times a carton is transferred and the number of broken ampules;  control the $\alpha$ risk at .05.  State the alternatives, decision rule, and conclusion.
+###  Conduct an F test to decide whether or not there is a linear association between the number of times a carton is transferred and the number of broken ampules;  control the $\alpha$ risk at .05.  State the alternatives, decision rule, and conclusion.
 
 The questiopn is asking to use the F test from an ANOVA analysis.  I will use the formulas:
 
@@ -731,7 +735,7 @@ $F(1-\alpha;1,n-2)=$ `r round(F, digits=4)`
 
 Since `r round(anova121$'F value'[1], digits=4)` > `r round(F, digits=4)`, I conclude $H_a$, that $\beta_1 \neq 0$
 
-### c. Obtain the $t^*$ statistic for the test in part (b) and demonstrate numerically its equivalence to the $F^*$ statistic obtained in part (b)
+###  Obtain the $t^*$ statistic for the test in part (b) and demonstrate numerically its equivalence to the $F^*$ statistic obtained in part (b)
 
 
 
@@ -762,7 +766,7 @@ $t^*=$ `r tstar` ;   $(t^*)^2=$ `r round(tstar^2, digits=4)` $=F^*$
 Since $ |t^*| > t(1-\frac{\alpha}{2};n-2) \textrm{, conclude } H_a$
 
 
-### d. Calculate $R^2$ and $r$.  What proportion of the variation in Y is accounted for by introducing $X$ into the regression model?
+###  Calculate $R^2$ and $r$.  What proportion of the variation in Y is accounted for by introducing $X$ into the regression model?
 
 $R^2=\frac{SSR}{SSTO}\\
 SSTO=SSR+SSE$
@@ -794,7 +798,7 @@ About 90.09% of the variance in $Y$ is accounted for by introducing $X$ into the
 
 ## (Problem 2.27) Refer to **Muscle mass** Problem 1.27
 
-### a. Conduct a test to decide whether or not there is a negative linear association between amount of muscle mass and age.  Control the risk of Type I error at .05.  State the alternatives, decision rule, and conclusion.  What is the P-value of the test?
+###  Conduct a test to decide whether or not there is a negative linear association between amount of muscle mass and age.  Control the risk of Type I error at .05.  State the alternatives, decision rule, and conclusion.  What is the P-value of the test?
 
 I can use one-sided t-test to decide if the is a negative linear associaiton btween amount of muscle mass and age.  I will use the formulas:
 
@@ -833,11 +837,11 @@ The P-value is `r p` to within 5 digits.
 
 
 
-### b. The two-sided P-value for the test whether $\beta_0=0$ is 0+.  Can it now be concluded that $b_0$ provides relevant information on the amount of muscle mass at birth for a female child?
+###  The two-sided P-value for the test whether $\beta_0=0$ is 0+.  Can it now be concluded that $b_0$ provides relevant information on the amount of muscle mass at birth for a female child?
 
 No.  
 
-### c. Estimate with 95 percent confidence interval the difference in expected muscle mass for women whose ages differ by one year.  Why is it not necessary to know the specific ages to make this estimate?
+###  Estimate with 95 percent confidence interval the difference in expected muscle mass for women whose ages differ by one year.  Why is it not necessary to know the specific ages to make this estimate?
 
 The expected change in the predicted variable for each unit changein the independent variable is the slope of the regression line, or $\beta_1$.  I will use the following formulas to extimate the 95% confidence interval for $\beta_1$
 
@@ -862,7 +866,7 @@ The 95% Confidence for $\beta_1$ is:  `r lb` $\leq$ `r B1` $\leq$ `r up`
 
 ## (Problem 2.28) Refer to **Muscle mass** Problem 1.27
 
-### a. Obtain a 95% confidence interval for the mean muscle mass for women of age 60.  Interpret your confidence interval.
+###  Obtain a 95% confidence interval for the mean muscle mass for women of age 60.  Interpret your confidence interval.
 
 Because we are asked to estimate the *mean* muscle mass, I will use the following formulas:
 
@@ -894,7 +898,7 @@ $\bar{X}=$ `r mean(df27$X)`
 Becasue $X=60$ is so close to $\bar{X}$, I expect that the confidence interval at this point is as narrow as it will be at any other point.
 
 
-### b. Obtain a 95% prediction interval for the muscle mass of a woman whose age is 60.  Is the prediction interval relatively precise?
+###  Obtain a 95% prediction interval for the muscle mass of a woman whose age is 60.  Is the prediction interval relatively precise?
 
 Because we are asked to estimate *predicted* values, I will use the following formulas:
 
@@ -925,7 +929,7 @@ The 95% Confidence Interval is `r EY60-t*sy60` < `r EY60` < `r EY60+t*sy60`
 
 The 95% CI for predicted values is much larger than for mean values, because the CI must take into account both the variance in the mean values, and the variance in the predicted value around the mean.
 
-### c. Determine the boundary values of the 95% conficence band for the regression line when $X_h=60$.  Is your confidence band wider at this point than the confidence interval in part (a)?  Should it be?
+###  Determine the boundary values of the 95% conficence band for the regression line when $X_h=60$.  Is your confidence band wider at this point than the confidence interval in part (a)?  Should it be?
 
 Because the question asks for boundary values of the confidence band, I will use the formulas 
 
@@ -955,7 +959,7 @@ The confidence band is wider at this point the the confidence interval in part (
 
 ## (Problem 2.29) Refer to **Muscle mass** Problem 1.27
 
-### a. Plot the deviations $Y_i-\hat{Y}_i$ against $X_i$ on one graph.  Plot the deviations $\hat{Y}_i - \bar{Y}$ against $X_i$ on another graph, using the same scales as in the first graph.  From your two grphs, does SSE or SSR appear to be the larger component of SSTO?  What does this imply about the magnitude of $R^2$
+###  Plot the deviations $Y_i-\hat{Y}_i$ against $X_i$ on one graph.  Plot the deviations $\hat{Y}_i - \bar{Y}$ against $X_i$ on another graph, using the same scales as in the first graph.  From your two grphs, does SSE or SSR appear to be the larger component of SSTO?  What does this imply about the magnitude of $R^2$
 
 ```{r}
 df27<-read.table("CH01PR27.txt", col.names=c("Y","X"))     
@@ -974,7 +978,7 @@ ggplot(data=df27) +
 
 SSR appears it will be greater.
 
-### b. Set up the ANOVA table
+###  Set up the ANOVA table
 
 ```{r}
 df27<-read.table("CH01PR27.txt", col.names=c("Y","X"))     
@@ -982,7 +986,7 @@ model127<-lm(Y~X,df27)
 anova(model127)
 ```
 
-### c. Test whether or not $\beta_1=0$ using an F test with $\alpha=.05$.  State the alternatives, decision rule, and conclusion.
+###  Test whether or not $\beta_1=0$ using an F test with $\alpha=.05$.  State the alternatives, decision rule, and conclusion.
 
 The questiopn is asking to use the F test from an ANOVA analysis.  I will use the formulas:
 
@@ -1010,7 +1014,7 @@ Since `r round(anova127$'F value'[1], digits=4)` > `r round(F, digits=4)`, I con
 
 
 
-### d. What proportion of the total variation in muscle mass remains "unexplaned" when age is introduced into the analysis?  Is this proportion relatively small or large?
+###  What proportion of the total variation in muscle mass remains "unexplaned" when age is introduced into the analysis?  Is this proportion relatively small or large?
 
 The question is asking for the relative contribution of a predictor variable to the variation in the outcome variable.  This is measured by the Coefficient of Determination.  I will use the formulas
 
@@ -1037,7 +1041,7 @@ $R^2=$ `r round(SSR/SSTO, digits=4)`
 
 About 25% of the variabion is left "unexplained" after age is introduced into the analysis.  This proportion is relatively small.
 
-### e. Obtain $R^2$ and $r$.
+###   Obtain $R^2$ and $r$.
 
 $R^2$ = `r round(SSR/SSTO, digits=4)` 
 
