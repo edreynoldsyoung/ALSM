@@ -23,6 +23,7 @@ library(ggfortify)
 library(randtests)
 library(MASS)
 library(lmtest)
+library(moments)
 
 df20<-fread("http://users.stat.ufl.edu/~rrandles/sta4210/Rclassnotes/data/textdatasets/KutnerData/Chapter%20%201%20Data%20Sets/CH01PR20.txt", col.names=c("Y","X"))
 df21<-fread("http://users.stat.ufl.edu/~rrandles/sta4210/Rclassnotes/data/textdatasets/KutnerData/Chapter%20%201%20Data%20Sets/CH01PR21.txt", col.names=c("Y","X"))
@@ -30,6 +31,7 @@ df27<-fread("http://users.stat.ufl.edu/~rrandles/sta4210/Rclassnotes/data/textda
 
 ```
 # Chapter 3
+
 ## Departures from the model to be studied by residuals 
 ### The regression function is not linear (functional misspecification)  
 #### Diagnostic Plots of Residuals
@@ -42,52 +44,66 @@ df27<-fread("http://users.stat.ufl.edu/~rrandles/sta4210/Rclassnotes/data/textda
 ##### Consider non-linear models: 
 ###### Polynomial Regression
 ###### Piecewise Regression
+##### Use Transformation to linearize a non-linear function
+
 ### The error terms do not have constant variance (heteroskedacity)  
 #### Diagnostic Plots of Residuals
 ##### plot residuals against the predictor variable
 ##### plot residuals against the fitted values
 ##### Plot of absolute or squared residuals against predictor variable and fitted values
 #### Statistical Tests
+##### White's Test
+##### Breusch-Pagan test
 #### Remedial Measures
+##### transformation of the dependent variable (sqrt if var is increasing; log if decreasing)
+##### weighted least squares
+
 ### The error terms are not independent (serial corelation of error terms)  
+This occurs in two situations mainly:  time series, and clustering due to hierarchically structured (nested) data
+
 #### Diagnostic Plots of Residuals
 ##### Plot of residuals against time or other sequence
 #### Statistical Tests
 #### Remedial Measures
+
 ### The model fits all but one or a few outlier observations  
 #### Diagnostic Plots of Residuals
-
-plot residuals against the predictor variable
-
-plot residuals against the fitted values - especially using semistudentized residuals
-
-Box plot, stem-and-leaf plots, and dot plots of residuals
-
+##### plot residuals against the predictor variable
+##### plot residuals against the fitted values - especially using semistudentized residuals
+##### Box plot, stem-and-leaf plots, and dot plots of residuals
 #### Statistical Tests
-
+##### Cook's Distance
 #### Remedial Measures
+##### Investigate Cause of anomaly
+###### errors in measurement
+###### factor not accounted for in the model
+##### Robust Regression
 
 ### The error terms are not normally distributed (structural changes in error terms)
-
 #### Diagnostic Plots of Residuals
-
-Box plot, stem-and-leaf plots, and dot plots of residuals
-
-Normal probability plot of residuals
-
+##### Box plot, stem-and-leaf plots, and dot plots of residuals
+##### Normal probability plot of residuals
 #### Statistical Tests
-
+##### Shapiro-Wilk
+##### Kolmogorov–Smirnov 
 #### Remedial Measures
+##### Generalized Linear Models
+##### Transform Dependant Variable so that it is approximately normal
+###### Box-Cox
 
 ### One or several important predictor variables have been omitted from the model.
-
 #### Diagnostic Plots of Residuals
-
-Plot residuals against variables omitted from the model (such as time)
-
+##### Plot residuals against variables omitted from the model (such as time)
 #### Statistical Tests
-
 #### Remedial Measures
+
+### Absence of Multicollinearity 
+#### Diagnostic Plots of Residuals
+#### Statistical Tests
+##### Tolerance and variance inflation factor statistics
+#### Remedial Measures
+##### remove one or more predictors with strong inter-correlations.
+##### Ridge Regression
 
 ## Dignostics of Residuals
 
@@ -107,6 +123,7 @@ Plot residuals against variables omitted from the model (such as time)
 ### Durbin-Watson Test
 ### Brown-Forsythe Test
 ### Breusch-Pagan Test
+### White's Test for heteroscedasticity
 ### Hat Matrix (see Ch 10)
 ### Chi-Square test
 ### Kolmogorov-Smirnov Test
@@ -117,6 +134,7 @@ Plot residuals against variables omitted from the model (such as time)
 
 ### Abandon Linear Regression Model and develop more appropriate model
 #### Non Linear Model
+#### Generalized Linear Model
 #### Multiple Regression Model
 #### Robust Regression Models
 #### Weighted Least Squares
@@ -210,8 +228,31 @@ $\quad H_0: \gamma_1=0\\
 ### Lack-of-Fit Test
 
 <span style="display:block" id="math">
-$\sum_{i}\sum_{1\le j \le n_i}(Y_{ij}-\hat{Y}_i)^2=\sum_{i}\sum_{1 \le j \le n_i}(Y_{ij}-\bar{Y}_i)^2 + \sum_{i}n_i(\bar{Y}_i - \hat{Y}_i)^2$
+$\sum_{i}\sum_{1\le j \le n_i}(Y_{ij}-\hat{Y}_i)^2=\sum_{i}\sum_{1 \le j \le n_i}(Y_{ij}-\bar{Y}_i)^2 + \sum_{i}n_i(\bar{Y}_i - \hat{Y}_i)^2\\
+SSLF= \sum_{i}n_i(\bar{Y}_i - \hat{Y}_i)^2\\
+SSPE= \sum_{i}\sum_{1 \le j \le n_i}(Y_{ij}-\bar{Y}_i)^2\\$
 </span>
+<span id="note"> 
+c is the number of combinations of categories of independent variables for which we have observations in the data.
+p is the number of regression parameters.
+n is the sample size.
+</span>
+<span style="display:block" id="math">
+$F^* = \frac{\frac{SSLF}{c-p}}{\frac{SSPE}{n-c}}\\
+\textrm{Decision Rule:}\\
+\quad H_0: E\{Y\}=\beta_0+\beta_1 X \textrm{ (linearity) }\\
+\quad H_a: E\{Y\} \neq \beta_0+\beta_1 X \textrm{ (non-linearity) } \\
+\textrm{If } F^* \leq F(1-\alpha; c-2; n-c) \textrm{, then conclude } H_0\\
+\textrm{If } F^* > F(1-\alpha; c-2; n-c) \textrm{, then conclude } H_a$
+</span>
+
+        n<-length(DATA$X)
+        alpha<-.05
+        m<-lm(Y~X, data=DATA)
+        FULL <- lm(Y~0+as.factor(X), data=DATA)
+        a<-anova(m, FULL)
+        Fstar <- a$F[2]
+        F<-qf(1-alpha, a$Df[2], a$Res.Df[2])
 
 ## (Problem 3.4) 
 
@@ -521,8 +562,22 @@ r<-sqrt(R2)
 
 The coefficient of correlation between the ordered residuals and their expected values under normality is `r r`
 
-###  Conduct the Breusch-Pagan test to determine whether or not the error variance varies with the level of $X$.  Use $\alpha=.01$. State the alternatives, decision rule, and conclusion.  Is your conclusion consistent with your preliminary findings in part (c)?
+###  Conduct the Breusch-Pagan test to determine whether or not the error variance varies with the level of $X$.  Use $\alpha=.01$. State the alternatives, decision rule, and conclusion.  Is your conclusion consistent with your preliminary findings in part (3)?
 
+$log_e \sigma_i^2 = \gamma_0 + \gamma_1 X_i\\
+\quad H_0: \gamma_1=0\\
+\quad H_a: \gamma_1 \neq 0\\
+\textrm{If }|X^2_{BP}|\leq \chi^2(1-\alpha; 1)\textrm{ then conclude }H_0\\
+\textrm{If }|X^2_{BP}|>  \chi^2(1-\alpha; 1)\textrm{ then conclude }H_a$
+
+```{r}
+bp27<-bptest(m27, studentize=FALSE, data=df27)
+bp27
+```
+
+The p-value is larger than $\alpha$ ( `r bp27$p.value[1]` > .01 ), therefore I would not reject $H_0$.
+
+This is consistent with the preliminary findings in part (3).  However, the p-value is fairly low, and if we had set our $\alpha$ higher we would have rejected $H_0$.  This is consistent with the relatively low value of r we saw in part (3), and the visual departures we see in the normal probability plot.
 
 ## (Problem 3.13) 
 
@@ -530,25 +585,141 @@ Refer to **Copier maintenance** Problem 1.20
 
 ###  What are the alternative conclusion when testing for lack of fit of a linear regression funtion?
 
+$\quad H_0: E\{Y\}=\beta_0+\beta_1 X \textrm{ (linearity) }\\
+\quad H_a: E\{Y\} \neq \beta_0+\beta_1 X \textrm{ (non-linearity) }$
+
 ###  Perform the test indicated in part (a).  Control the risk of Type I error at .05.  State the decion rule and conlcusion.
 
-###  Does the test in part (b) detect other departures from regression model 2.1, such as lack of constant variance or lack or normality in the error terms?  Could the results of the test of lack of fit be affected by such departures?  Discuss.
+```{r}
+n<-length(df20$X)
+alpha<-.05
+m<-lm(Y~X, data=df20)
+FULL <- lm(Y~0+as.factor(X), data=df20)
+a<-anova(m, FULL)
+Fstar <- a$F[2]
+F<-qf(1-alpha, a$Df[2], a$Res.Df[2])
+```
 
+$\textrm{Decision Rule: }\\
+\textrm{If } F^* \leq F(1-\alpha; c-2; n-c) \textrm{, then conclude } H_0\\
+\textrm{If } F^* > F(1-\alpha; c-2; n-c) \textrm{, then conclude } H_a$
+
+Since $F^* =$ `r Fstar` and $F(1-\alpha; c-2; n-c) =$ `r F`, we can see that $F^* \leq F$ and we condlude $H_0$, that the function is linear. 
+
+###  Does the test in part (2) detect other departures from regression model 2.1, such as lack of constant variance or lack or normality in the error terms?  Could the results of the test of lack of fit be affected by such departures?  Discuss.
+
+The lack of fit test assumes that the observations Y for given X are independent, normally distributed, and with constant variance.
+
+If these assumptions are not met, then a linear regression function may still fit the data, but the extimation of the regression parameters may not be accurate.
 
 ## (Problem 3.17) 
 
-**Sales growth**  A marketing researcher studied annual sales of a product that had beenintroduced 10 years ago.  The data are as follow, where $X$ is the year (coded) and $Y$ is sales in thousands of units.
+**Sales growth**  A marketing researcher studied annual sales of a product that had been introduced 10 years ago.  The data are as follow, where $X$ is the year (coded) and $Y$ is sales in thousands of units.
+
+To explore which transformations would best correct any problems with the assumptions of normality, homoskedasticity and linearity - consider using the R package trafo.
 
 ###  Prepare a scatter plot of the data.  Does a linear relation appear adequate here?
 
+```{r}
+ggplot(data=df27,aes(X,Y)) + 
+        geom_point() 
+        
+```
+
+Yes, the relation appears linear, though the variance appears to increase as X gets larger.
+
 ###  Use the Box-Cox proceudre and standardization (3.36) to find an appropriate power transformation of $Y$.  Evaluate SSE for $\lambda =.3,.4,.5,.6,.7$.  What transformation of $Y$ is suggested?  
+
+```{r} 
+m27<-lm(Y~X, data=df27)
+bc<-boxcox(m27)
+lambda<-bc$x[which.max(bc$y)]
+```
+
+The optimal $\lambda$ is `r lambda`
 
 ###  Use the transformation $Y^t=\sqrt{Y}$ and obtain the estimated linear regression function for the transformed data.
 
-###  Plot the estimated regression line and the transformed data.  Does theregression line appear to be a good fit to the transformed data?
+```{r}
+m27b<-lm(Y^lambda~X, data=df27)
+m27c<-lm(Y^.5~X, data=df27)
+m27d<-lm(Y^.3~X, data=df27)
+m27e<-lm(Y^.2~X, data=df27)
+m27f<-lm(log(Y)~X, data=df27)
+ggplot(data=df27, aes(X,Y^lambda)) +
+        geom_point()+
+        geom_smooth(method = "lm")
+```
+
+###  Plot the estimated regression line and the transformed data.  Does the regression line appear to be a good fit to the transformed data?
+
+Yes
 
 ###  Obtain the residuals and plot the against the fitted values.  Also prepare a normal probability plot.  What do your plots show?
 
-###  Express the estimated ression function in the original units.
+```{r}
+qqnorm(rstandard(m27),
+       ylab="Standardized Residuals",
+       xlab="Normal Scores",
+       main="Normal Probability Plot of the residuals"
+       )
+qqline(rstandard(m27))
+
+qqnorm(rstandard(m27b),
+       ylab="Standardized Residuals",
+       xlab="Normal Scores",
+       main="Normal Probability Plot of the box-cox residuals lamdda=1.5"
+       )
+qqline(rstandard(m27b))
+
+qqnorm(rstandard(m27c),
+       ylab="Standardized Residuals",
+       xlab="Normal Scores",
+       main="Normal Probability Plot of the box-cox residuals lambda=0.5"
+       )
+qqline(rstandard(m27c))
+
+qqnorm(rstandard(m27d),
+       ylab="Standardized Residuals",
+       xlab="Normal Scores",
+       main="Normal Probability Plot of the box-cox residuals lambda=0.3"
+       )
+qqline(rstandard(m27d))
+
+qqnorm(rstandard(m27e),
+       ylab="Standardized Residuals",
+       xlab="Normal Scores",
+       main="Normal Probability Plot of the box-cox residuals lambda=0.2"
+       )
+qqline(rstandard(m27e))
+
+qqnorm(rstandard(m27f),
+       ylab="Standardized Residuals",
+       xlab="Normal Scores",
+       main="Normal Probability Plot of the box-cox residuals log"
+       )
+qqline(rstandard(m27f))
+
+skewness(m27$residuals)
+skewness(m27b$residuals)
+skewness(m27c$residuals)
+skewness(m27d$residuals)
+skewness(m27e$residuals)
+skewness(m27f$residuals)
+```
 
 
+
+###  Express the estimated regression function in the original units.
+
+```{r}
+ggplot(data=df27, aes(X,log(Y))) +
+        geom_point()+
+        geom_smooth(method = "lm")
+```
+
+The regression function can be expressed as:  
+
+$\log{Y}=$ `r m27f$coefficients[1]` `r m27f$coefficients[2]`X
+
+$Y=\frac{`r 10^m27f$coefficients[1]`}{`r 10^abs(m27f$coefficients[2])`(10^X)}$
