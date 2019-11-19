@@ -46,7 +46,9 @@ b_1\pm t(1-\alpha/2; n-2)s\{b_1\}\\
 \quad H_0: \beta_1=\beta_{10}\\
 \quad H_1: \beta_1 \neq \beta_{10}\\$
 </span>
-<span style="display:block" id="note">Note that if $\beta_{10}=0$ then this formula simplifies to $t^*=\frac{b_1}{s\{b_1\}}$ </span>
+<span style="display:block" id="note">
+Note that if $\beta_{10}=0$ then this formula simplifies to $t^*=\frac{b_1}{s\{b_1\}}$ 
+</span>
 <span style="display:block" id="math">
 $\quad t^*=\frac{b_1-\beta_{10}}{s\{b_1\}}\\
 \quad \textrm{If } |t^*| \leq t(1-\frac{\alpha}{2};n-2) \textrm{, conclude } H_0\\
