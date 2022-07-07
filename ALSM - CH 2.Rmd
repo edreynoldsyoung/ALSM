@@ -10,7 +10,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, cache=TRUE, warning=FALSE, message=FALSE)
+knitr::opts_chunk$set(echo = TRUE, cache=FALSE, warning=FALSE, message=FALSE)
 ```
 
 <!-- Load Libraries and Data -->
@@ -23,10 +23,11 @@ library(ggfortify)
 library(randtests)
 library(MASS)
 library(lmtest)
+library(pwr)
 
-df20<-fread("http://users.stat.ufl.edu/~rrandles/sta4210/Rclassnotes/data/textdatasets/KutnerData/Chapter%20%201%20Data%20Sets/CH01PR20.txt", col.names=c("Y","X"))
-df21<-fread("http://users.stat.ufl.edu/~rrandles/sta4210/Rclassnotes/data/textdatasets/KutnerData/Chapter%20%201%20Data%20Sets/CH01PR21.txt", col.names=c("Y","X"))
-df27<-fread("http://users.stat.ufl.edu/~rrandles/sta4210/Rclassnotes/data/textdatasets/KutnerData/Chapter%20%201%20Data%20Sets/CH01PR27.txt", col.names=c("Y","X"))
+df20<-read.csv("data/Chapter1DataSets/CH01PR20.txt", header=FALSE, sep=" ", col.names=c("Y","X"))
+df21<-read.csv("data/Chapter1DataSets/CH01PR21.txt", header=FALSE, sep=" ", col.names=c("Y","X"))
+df27<-read.csv("data/Chapter1DataSets/CH01PR27.txt", header=FALSE, sep=" ", col.names=c("Y","X"))
 ```
 
 # Chapter 2
@@ -166,7 +167,6 @@ $r= \pm \sqrt{R^2}$
 ###  Estimate the change in the mean service time when the number of copiers serviced increases by one.  Use a 90 percent confidence interval.  Interpret your confidence interval.
 
 ```{r}
-df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
 model120<-lm(Y~X,df20)
 n<-length(df20$X)
 B1<-model120$coefficients[2]
@@ -184,7 +184,6 @@ change in the mean service time when the number of copiers serviced increases by
 
 
 ```{r}
-df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
 model120<-lm(Y~X,df20)
 n<-length(df20$X)
 B1<-model120$coefficients[2]
@@ -220,7 +219,6 @@ Yes - since the confidence interval for the slope does not include 0.
 ###  The manufacturer has suggested that the mean required time should not increase by more than 14 minutes for each additional copier that is serviced on a service call.  Conduct a test to decide whether this standard is being satisfied by Tr-City.  Control the risk of a Type 1 error at .05.  State the alternatives, decidion rule, and conclusion.  What is the P-value of the test?
 
 ```{r}
-df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
 model120<-lm(Y~X,df20)
 n<-length(df20$X)
 B1<-model120$coefficients[2]
@@ -259,7 +257,6 @@ The intercept, $b_0$ is negative, which does not have meaning regarding time.  H
 ###   Estimate $\beta_1$ with a 95 percent confidence interval.  Interpret your interval estimate.
 
 ```{r}
-df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
 model121<-lm(Y~X,df21)
 n<-length(df21$X)
 B1<-model121$coefficients[2]
@@ -277,7 +274,6 @@ $\beta_1$: `r lb` $\leq$ `r B1` $\leq$ `r up`
 
 
 ```{r}
-df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
 model121<-lm(Y~X,df21)
 n<-length(df21$X)
 B1<-model121$coefficients[2]
@@ -311,7 +307,6 @@ The P-Value is `r p`
 ###  $\beta_0$ represents here the mean number of ampules broken when no transfers of the shipment are made - i.e., when X=0.  Obtain a 95 percent conficence interval for $\beta_0$ and interpret it.
 
 ```{r}
-df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
 model121<-lm(Y~X,df21)
 n<-length(df21$X)
 B0<-round(model121$coefficients[1], digits=4)
@@ -343,7 +338,6 @@ $\beta_0$:  `r lb` $\leq$ `r B0` $\leq$ `r ub`
 ###  A consultant has suggested, on the basis of previous experience, that the mean number of broken ampules should not exceed 9.0 when no transfers are made.  Conduct an appropriate test, useing $\alpha=.025$.  State the alternatives, decision rule, and conclusion.  What is the P-value of the test?
 
 ```{r}
-df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
 model121<-lm(Y~X,df21)
 n<-length(df21$X)
 B0<-round(model121$coefficients[1], digits=4)
@@ -356,7 +350,7 @@ p<-round(2*pt(-abs(tstar), n-2), digits=5)
 ```
 
 $\quad H_0: \beta_0 \leq 9\\
-\quad H_a: \beta_1 > 9\\
+\quad H_a: \beta_0 > 9\\
 \quad t^*=\frac{b_0-9}{s\{b_0\}}\\
 \quad \textrm{If } |t^*| \leq t(1-\frac{\alpha}{2};n-2) \textrm{, conclude } H_0\\
 \quad \textrm{If } |t^*| > t(1-\frac{\alpha}{2};n-2) \textrm{, conclude } H_a$
@@ -376,7 +370,7 @@ Since $t^* \leq t(.9875, 8)$, we conclude $H_0$, that $\beta_0 \leq 9$.  This su
 ###  Obtain the power of your test in part (b) if actually $\beta_1=2.0$.  Assume $\sigma\{b_1\}=.50$  Also obtain the power of your test in part (d) if actually $\beta_0=11$.  Assume $\sigma\{b_0\}=.75$
 
 ```{r}
-pwr.t.test(d=(2-0)/.50, sig.level=0.05, n=45, type = "two.sample" )
+power.t.test(d=(2-0)/.50, sig.level=0.05, n=45, type = "two.sample" )
 ```
 
 
@@ -392,7 +386,6 @@ s\{\hat{Y}_h\}=\sqrt{(s^2\{\hat{Y}_h\})}\\
 \textrm{Confidence Interval for }\hat{Y}_h:  \hat{Y}_h \pm t(1-\frac{\alpha}{2}; n-2)s\{\hat{Y}_h\}$
 
 ```{r}
-df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
 model120<-lm(Y~X,df20)
 n<-length(df20$X)
 B0<-model120$coefficients[1]
@@ -418,7 +411,6 @@ $s^2\{pred\}=MSE+s^2\{\hat{Y}_h\}=MSE \left [ 1+\frac{1}{n}+ \frac{(X_h-\bar{X})
 \textrm{Confidence Interval for }Y_{h: predicted}: \hat{Y}_h\pm t(1-\frac{\alpha}{2};n-2)s\{pred\}\\$
 
 ```{r}
-df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
 model120<-lm(Y~X,df20)
 n<-length(df20$X)
 B0<-model120$coefficients[1]
@@ -441,7 +433,6 @@ This Confidence Interval *predicted* service time should be wider than the Confi
 ###  Management wishes to estimate the expected service time per copier on calls in which six copiers are serviced.  Obtain an appropriate 90 percent confidence interval by convenerting the interval obtained in part (a).  Interpret the converted confidence interval.
 
 ```{r}
-df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
 model120<-lm(Y~X,df20)
 n<-length(df20$X)
 B0<-model120$coefficients[1]
@@ -463,7 +454,6 @@ The 90% Confidence Interval is `r (EY6-t*sy6)/6` < `r EY6/6` < `r (EY6+t*sy6)/6`
 ###  Determine the boundary values of the 90 percent confidence band for the regression line when $X_h=6$.  Is your confidence band wider at this point than the confidence interval in part (a)?  Should it be?
 
 ```{r}
-df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
 model120<-lm(Y~X,df20)
 n<-length(df20$X)
 a<-.10
@@ -498,7 +488,6 @@ s\{\hat{Y}_h\}=sqrt(s^2\{\hat{Y}_h\})\\
 \textrm{Confidence Interval for }\hat{Y}_h:  \hat{Y}_h \pm t(1-\frac{\alpha}{2}; n-2)s\{\hat{Y}_h\}$
 
 ```{r}
-df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
 model121<-lm(Y~X,df21)
 n<-length(df21$X)
 B0<-model121$coefficients[1]
@@ -530,7 +519,6 @@ $s^2\{pred\}=MSE+s^2\{\hat{Y}_h\}=MSE \left [ 1+\frac{1}{n}+ \frac{(X_h-\bar{X})
 \textrm{Confidence Interval for }Y_{h: predicted}: \hat{Y}_h\pm t(1-\frac{\alpha}{2};n-2)s\{pred\}\\$
 
 ```{r}
-df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
 model121<-lm(Y~X,df21)
 n<-length(df21$X)
 a<-.01
@@ -556,7 +544,6 @@ $\textrm{Confidence Interval for }Y_{h: predicted}: \hat{Y}_h\pm t(1-\frac{\alph
 s^2\{predmean\}=\frac{MSE}{m}+s^2\{\hat{Y}_h\}=MSE\left [\frac{1}{m}+\frac{1}{n}+\frac{(X_h-\bar{X})^2}{\sum(X_i-\bar{X})^2}\right ]\\$
 
 ```{r}
-df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
 model121<-lm(Y~X,df21)
 n<-length(df21$X)
 a<-.01
@@ -583,7 +570,6 @@ $\hat{Y}_h \pm Ws\{\hat{Y}_h\}\\
 W^2=2F(1-\alpha;2,n-2)\\$
 
 ```{r}
-df20<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
 model121<-lm(Y~X,df21)
 n<-length(df21$X)
 a<-.01
@@ -615,7 +601,6 @@ The 99% Confidence band is wider than it is in part (a) because the confidence b
 ###  Set up the basic ANOVA table in the format of Table 2.2.  Which elements of your table are additive?  Also set up the ANOVA table in the format of Table 2.3.  How do the two table differ?
 
 ```{r}
-df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
 model120<-lm(Y~X,df20)
 anova(model120)
 ```
@@ -632,7 +617,6 @@ $F^*=\frac{MSR}{MSE}\\
 \quad \textrm{if }F^* > F(1-\alpha;1,n-2) \textrm{; conclude }H_a$
 
 ```{r}
-df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
 model120<-lm(Y~X,df20)
 n<-length(df20$X)
 a<-.10
@@ -655,7 +639,6 @@ SSTO=SSR+SSE$
 
 
 ```{r}
-df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
 model120<-lm(Y~X,df20)
 n<-length(df20$X)
 a<-.10
@@ -676,7 +659,6 @@ $R^2=$ `r round(SSR/SSTO, digits=4)`
 ###  Calculate r and attach the appropriate sign.
 
 ```{r}
-df20<-read.table("CH01PR20.txt", col.names=c("Y","X"))     
 model120<-lm(Y~X,df20)
 n<-length(df20$X)
 a<-.10
@@ -704,7 +686,6 @@ In this case, R^2^ has a more clear-cut operational interpretation, since X is a
 ###  Set up the ANOVA table.  Which elements are additive?
 
 ```{r}
-df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
 model121<-lm(Y~X,df21)
 anova(model121)
 ```
@@ -723,7 +704,6 @@ $F^*=\frac{MSR}{MSE}\\
 \quad \textrm{if }F^* > F(1-\alpha;1,n-2) \textrm{; conclude }H_a$
 
 ```{r}
-df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
 model121<-lm(Y~X,df21)
 n<-length(df21$X)
 a<-.05
@@ -742,7 +722,6 @@ Since `r round(anova121$'F value'[1], digits=4)` > `r round(F, digits=4)`, I con
 
 
 ```{r}
-df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
 model121<-lm(Y~X,df21)
 n<-length(df21$X)
 B1<-model121$coefficients[2]
@@ -775,7 +754,6 @@ SSTO=SSR+SSE$
 
 
 ```{r}
-df21<-read.table("CH01PR21.txt", col.names=c("Y","X"))     
 model121<-lm(Y~X,df21)
 n<-length(df21$X)
 a<-.10
@@ -813,7 +791,6 @@ H_a: \beta_1 < 0\\
 I will set $\alpha=0.05$
 
 ```{r}
-df27<-read.table("CH01PR27.txt", col.names=c("Y","X"))     
 model127<-lm(Y~X,df27)
 n<-length(df27$X)
 B1<-model127$coefficients[2]
@@ -852,7 +829,6 @@ s^2\{b_1\}=\frac{MSE}{\sum(X_i-\bar{X})^2}; s\{b_1\}=\sqrt{(\frac{MSE}{\sum(X_i-
 b_1\pm t(1-\alpha/2; n-2)s\{b_1\}\\$
 
 ```{r}
-df27<-read.table("CH01PR27.txt", col.names=c("Y","X"))     
 model127<-lm(Y~X,df27)
 n<-length(df27$X)
 B1<-model127$coefficients[2]
@@ -878,7 +854,6 @@ s\{\hat{Y}_h\}=\sqrt{(s^2\{\hat{Y}_h\})}\\
 \textrm{Confidence Interval for }\hat{Y}_h:  \hat{Y}_h \pm t(1-\frac{\alpha}{2}; n-2)s\{\hat{Y}_h\}$
 
 ```{r}
-df27<-read.table("CH01PR27.txt", col.names=c("Y","X"))     
 model127<-lm(Y~X,df27)
 n<-length(df27$X)
 a<-.05
@@ -908,7 +883,6 @@ $s^2\{pred\}=MSE+s^2\{\hat{Y}_h\}=MSE \left [ 1+\frac{1}{n}+ \frac{(X_h-\bar{X})
 \textrm{Confidence Interval for }Y_{h: predicted}: \hat{Y}_h\pm t(1-\frac{\alpha}{2};n-2)s\{pred\}\\$
 
 ```{r}
-df27<-read.table("CH01PR27.txt", col.names=c("Y","X"))     
 model127<-lm(Y~X,df27)
 n<-length(df27$X)
 a<-.05
@@ -939,7 +913,6 @@ $\hat{Y}_h \pm Ws\{\hat{Y}_h\}\\
 W^2=2F(1-\alpha;2,n-2)\\$
 
 ```{r}
-df27<-read.table("CH01PR27.txt", col.names=c("Y","X"))     
 model127<-lm(Y~X,df27)
 n<-length(df27$X)
 a<-.05
@@ -964,7 +937,6 @@ The confidence band is wider at this point the the confidence interval in part (
 ###  Plot the deviations $Y_i-\hat{Y}_i$ against $X_i$ on one graph.  Plot the deviations $\hat{Y}_i - \bar{Y}$ against $X_i$ on another graph, using the same scales as in the first graph.  From your two grphs, does SSE or SSR appear to be the larger component of SSTO?  What does this imply about the magnitude of $R^2$
 
 ```{r}
-df27<-read.table("CH01PR27.txt", col.names=c("Y","X"))     
 model127<-lm(Y~X,df27)
 B0<-model127$coefficients[1]
 B1<-model127$coefficients[2]
@@ -983,7 +955,6 @@ SSR appears it will be greater.
 ###  Set up the ANOVA table
 
 ```{r}
-df27<-read.table("CH01PR27.txt", col.names=c("Y","X"))     
 model127<-lm(Y~X,df27)
 anova(model127)
 ```
@@ -1000,7 +971,6 @@ $F^*=\frac{MSR}{MSE}\\
 \quad \textrm{if }F^* > F(1-\alpha;1,n-2) \textrm{; conclude }H_a$
 
 ```{r}
-df27<-read.table("CH01PR27.txt", col.names=c("Y","X"))     
 model127<-lm(Y~X,df27)
 n<-length(df27$X)
 a<-.05
@@ -1025,7 +995,6 @@ SSTO=SSR+SSE$
 
 
 ```{r}
-df27<-read.table("CH01PR27.txt", col.names=c("Y","X"))     
 model127<-lm(Y~X,df27)
 anova127<-anova(model127)
 SSR<- anova127$`Sum Sq`[1]
@@ -1052,24 +1021,23 @@ $r$ = `r round(sqrt(SSR/SSTO), 4)`
 ## (Problem 2.62) Refer to the **CDI** data set.  Using $R^2$ as the criterion, which predictor variable accounts for the largest reduction in the variability in the number of active physicians?
 
 ```{r, message=FALSE}
-cnames<-c("ID","County","State","Area","Pop","Young","Old","Phys","Beds","Crime","HighSchool","BA","Poverty","Unemploy","PerCapitaIncome","TotalIncome","Region")
-df62<-fread("http://users.stat.ufl.edu/~rrandles/sta4210/Rclassnotes/data/textdatasets/KutnerData/Appendix%20C%20Data%20Sets/APPENC02.txt", col.names=cnames)
-df62[,c("ID", "County","State","Region"):=NULL]
-variability<-function(data, y){
-     model<-lm(reformulate(y, "Phys"), data=data)
-     anova<-anova(model)
-     SSR<- anova$`Sum Sq`[1]
-     SSE<- anova$`Sum Sq`[2]
-     SSTO<-SSR+SSE
-     R2<-SSR/SSTO
-     return(round(R2,3))
-}
-nm1 <- setdiff(names(df62), "Phys")
-ans<-transpose(df62[, lapply(nm1, variability, data = .SD)])
-ans[, Predictor:=nm1]
-setnames(ans, "V1", "R2")
-setcolorder(ans, c("Predictor", "R2"))
-ans[order(-R2)]
+# cnames<-c("ID","County","State","Area","Pop","Young","Old","Phys","Beds","Crime","HighSchool","BA","Poverty","Unemploy","PerCapitaIncome","TotalIncome","Region")
+# df62<-read.csv("data/AppendixCDataSets/APPENC02.txt", sep=" ", col.names=cnames)
+# variability<-function(data, y){
+#     model<-lm(reformulate(y, "Phys"), data=data)
+#     anova<-anova(model)
+#     SSR<- anova$`Sum Sq`[1]
+#     SSE<- anova$`Sum Sq`[2]
+#     SSTO<-SSR+SSE
+#     R2<-SSR/SSTO
+#     return(round(R2,3))
+#}
+#nm1 <- setdiff(names(df62), "Phys")
+#ans<-transpose(df62[, lapply(nm1, variability, data = df62)])
+#ans[, Predictor:=nm1]
+#setnames(ans, "V1", "R2")
+#setcolorder(ans, c("Predictor", "R2"))
+#ans[order(-R2)]
 ```
 
 
@@ -1083,31 +1051,32 @@ The variables accounting for the greatest reduction in variability in the number
 
 ## (Problem 2.63) Refer to the CDI data set.  For each geographic region, regress per capita income against the percentage of individuals ina county having at least a bachelor's degree.  Obtain a separate interval estimate of $\beta_1$ for each region.  Use a 90 percent confidence coefficient in each case.  Do the regression nes for the different regions appear to have similar slopes?
 
-```{r, message=FALSE}
-cnames<-c("ID","County","State","Area","Pop","Young","Old","Phys","Beds","Crime","HighSchool","BA","Poverty","Unemploy","PerCapitaIncome","TotalIncome","Region")
-dt<-fread("http://users.stat.ufl.edu/~rrandles/sta4210/Rclassnotes/data/textdatasets/KutnerData/Appendix%20C%20Data%20Sets/APPENC02.txt", col.names=cnames)
-variability<-function(R, data){
-     model<-lm(PerCapitaIncome~BA, data=data, subset=(Region==R))
-     n<-length(data[Region==R])
-     B1<-model$coefficients[2]
-     MSE<-sum(model$residuals^2)/(n-2)
-     s2b1<-MSE/sum((data[Region==R, BA]-mean(data[Region==R, BA]))^2)
-     sb1<-sqrt(s2b1)
-     t<-qt(.95,n-2)
-     lb<-B1-t*sb1
-     ub<-B1+t*sb1
-     rt<-c(lb,B1,ub)
-     return(rt)
-}
-ans<-transpose(dt[, lapply(1:4, variability, data = .SD)])
-ans[, Region:=1:4]
-setnames(ans, 1:3, c("Lower Limit", "Beta_1", "Upper Limit"))
-setcolorder(ans, c("Region","Lower Limit", "Beta_1", "Upper Limit"))
-ans
+ ```{r, message=FALSE}
+# cnames<-c("ID","County","State","Area","Pop","Young","Old","Phys","Beds","Crime","HighSchool","BA","Poverty","Unemploy","PerCapitaIncome","TotalIncome","Region")
+# dt<-read.csv("data/AppendixCDataSets/APPENC02.txt", sep=" ", col.names=cnames)
+# variability<-function(R, data){
+#     model<-lm(PerCapitaIncome~BA, data=data, subset=(Region==R))
+#     n<-length(data[Region==R])
+#     B1<-model$coefficients[2]
+#     MSE<-sum(model$residuals^2)/(n-2)
+#     s2b1<-MSE/sum((data[Region==R, BA]-mean(data[Region==R, BA]))^2)
+#     sb1<-sqrt(s2b1)
+#     t<-qt(.95,n-2)
+#     lb<-B1-t*sb1
+#     ub<-B1+t*sb1
+#     rt<-c(lb,B1,ub)
+#     return(rt)
+#}
+#ans<-transpose(dt[, lapply(1:4, variability, data = .SD)])
+#ans[, Region:=1:4]
+#setnames(ans, 1:3, c("Lower Limit", "Beta_1", "Upper Limit"))
+#setcolorder(ans, c("Region","Lower Limit", "Beta_1", "Upper Limit"))
+#ans
 ```
 The Slopes for the different regions appear to vary considerably, however, the 90% confidence intervals overlap, so I cannot say variation might not be random.
 
 ## (Problem 2.47)
+
 
 
 <!---

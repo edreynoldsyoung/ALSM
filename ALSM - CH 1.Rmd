@@ -10,7 +10,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, cache=TRUE, warning=FALSE, message=FALSE)
+knitr::opts_chunk$set(echo = TRUE, cache=FALSE, warning=FALSE, message=FALSE)
 ```
 
 <!-- Load Libraries and Data -->
@@ -25,10 +25,10 @@ library(MASS)
 library(lmtest)
 library(here)
 
-df19<-read.csv("data/Chapter1DataSets/CH01PR19.txt", sep=" ", col.names=c("Y","X"))
-df20<-read.csv("data/Chapter1DataSets/CH01PR20.txt", sep=" ", col.names=c("Y","X"))
-df21<-read.csv("data/Chapter1DataSets/CH01PR21.txt", sep=" ", col.names=c("Y","X"))
-df27<-read.csv("data/Chapter1DataSets/CH01PR27.txt", sep=" ", col.names=c("Y","X"))
+df19<-read.csv("data/Chapter1DataSets/CH01PR19.txt", header=FALSE, sep=" ", col.names=c("Y","X"))
+df20<-read.csv("data/Chapter1DataSets/CH01PR20.txt", header=FALSE, sep=" ", col.names=c("Y","X"))
+df21<-read.csv("data/Chapter1DataSets/CH01PR21.txt", header=FALSE, sep=" ", col.names=c("Y","X"))
+df27<-read.csv("data/Chapter1DataSets/CH01PR27.txt", header=FALSE, sep=" ", col.names=c("Y","X"))
 ```
 # Chapter 1
 
@@ -93,11 +93,11 @@ m20<-lm(Y~X, data=df20)
 t20<-augment(m20)
 ```
 
-The tri-City Office Equipment Corporation sells an imported copier on a fanchise basis and performs preventive maintenance and repair service on this copier.  The data below have been collected from 45 recent calls on users to perform routine preventive maintnance service:  for each call, X is the number of copiers serviced and Y is the total number of minutes spent by the service person.  Assume that first-order regression model is appropriate.
+The tri-City Office Equipment Corporation sells an imported copier on a franchise basis and performs preventive maintenance and repair service on this copier.  The data below have been collected from 45 recent calls on users to perform routine preventive maintenance service:  for each call, X is the number of copiers serviced and Y is the total number of minutes spent by the service person.  Assume that first-order regression model is appropriate.
 
 ### Obain the estimated regression function
 
-$\hat{Y}$= `r m20$coefficient[1]` + `r m20$coefficient[2]`(X)
+$\hat{Y}$= `r round(m20$coefficients[1],4)` + `r round(m20$coefficients[2],4)`(X)
 
 ###  Plot the estimates regression function and the data.  How well does the estimated regression funtion fit the data?
 
@@ -114,7 +114,7 @@ $\beta_0$ represents the amount of time it would take to repair 0 machines.  Tha
 ###  Obtain a point estimate of the mean service time when X=5 copiers are serviced.
 
 ```{r}
-m20$coefficients[1] + m20$coefficients[2]*5
+round(m20$coefficients[1] + m20$coefficients[2]*5, 4)
 ```
 
 ## (Problem 1.21) Airfreight breakage
@@ -134,19 +134,19 @@ ggplot(data=df21, aes(x=X, y=Y)) +
      geom_smooth(method='lm')
 ```
 
-$\hat{Y}$= `r m21$coefficient[1]` + `r m21$coefficient[2]`(X)
+$\hat{Y}$= `r round(m21$coefficients[1],2)` + `r round(m21$coefficients[2],2)`(X)
 
 ###  Obtain a point estimate of the expected number of broken ampules when X=1 transfer is made
 
-`r m21$coefficient[1]+m21$coefficient[2]`
+`r round(m21$coefficients[1]+m21$coefficients[2],2)`
 
 ###   Estimate the increase in the expected number of ampules broken when there are 2 transfers as compared to 1 transfer.
 
-`r m21$coefficient[2]`
+`r round(m21$coefficients[2],2)`
 
 ###   Verify that your fitted regression line goes through the point $(\bar{X}, \bar{Y})$
 
-$(\bar{X}, \bar{Y})=($  `r mean(df21$X)` , `r mean(df21$Y)`  $)$
+$(\bar{X}, \bar{Y})=($  `r round(mean(df21$X),2)` , `r round(mean(df21$Y),2)`  $)$
 
 
 ## (Problem 1.24) Refer to Copier maintenance Problem 1.20
@@ -155,32 +155,32 @@ $(\bar{X}, \bar{Y})=($  `r mean(df21$X)` , `r mean(df21$Y)`  $)$
 
 ```{r}
 m20$residuals
-sum(m20$residuals^2)
-sum((df20$Y-m20$coefficients[1]-m20$coefficients[2]*df20$X)^2)
+round(sum(m20$residuals^2),2)
+round(sum((df20$Y-m20$coefficients[1]-m20$coefficients[2]*df20$X)^2),2)
 ```
 
 They are the same.
 
 ###   Obtain point estimates of $\sigma^2$ and $\sigma$.  In what units is $\sigma$ expressed?
 
-`r sum((m20$residuals)^2)/(length(m20$residuals)-2)`
+`r round(sum((m20$residuals)^2)/(length(m20$residuals)-2),2)`
 
-`r sqrt(sum((m20$residuals)^2)/(length(m20$residuals)-2))`
+`r round(sqrt(sum((m20$residuals)^2)/(length(m20$residuals)-2)),2)`
 
 ## (Problem 1.25) Refer to Airfreight breakage Prolem 1.21
 
 ### Obtain the residual for the first case.  What is its relation $\epsilon_1$?
 
 ```{r}
-m21$residuals[1]
+round(m21$residuals[1],2)
 ```
 
 
 ###  Compute $\sum \epsilon_i^2$ and $MSE$.  What is estimated by $MSE$?
 
-$\sum \epsilon_i^2$=`r sum((m21$residuals)^2)`
+$\sum \epsilon_i^2$=`r round(sum((m21$residuals)^2),2)`
 
-$MSE$=`r sum((m21$residuals)^2)/(length(m21$residuals)-2)`
+$MSE$=`r round(sum((m21$residuals)^2)/(length(m21$residuals)-2),2)`
 
 $\sigma^2$
 
@@ -201,22 +201,22 @@ ggplot(data=df27, aes(x=X, y=Y)) +
      geom_smooth(method='lm')
 ```
 
-$\hat{Y}$=`r m27$coefficients[1]` `r m27$coefficients[2]`X
+$\hat{Y}$=`r round(m27$coefficients[1], 2)` `r round(m27$coefficients[2], 2)`X
 
 ###  Obtain the following:
 
-#### 1. a point estimate of the difference in the mean muscle mass for women differing in age by one year
+#### a point estimate of the difference in the mean muscle mass for women differing in age by one year
 
-$b_1=$ `r m27$coefficients[2]`
+$b_1=$ `r round(m27$coefficients[2],2)`
 
-#### 2. a point estimate of the mean muscle mass for women aged X=60 years
+#### a point estimate of the mean muscle mass for women aged X=60 years
 
-$\hat{Y}_{X=60}=$ `r m27$coefficients[1]+(m27$coefficients[2]*60)`
+$\hat{Y}_{X=60}=$ `r round(m27$coefficients[1]+(m27$coefficients[2]*60),2)`
 
-#### 3. the value of the residual for the eighth case
+#### the value of the residual for the eighth case
 
-$\epsilon_8=$ `r m27$residuals[8]`
+$\epsilon_8=$ `r round(m27$residuals[8],2)`
 
-#### 4. a point estimate of $\sigma^2$
+#### a point estimate of $\sigma^2$
 
-$\sigma^2=MSE=$ `r sum((m27$residuals)^2)/(length(m27$residuals)-2)`
+$\sigma^2=MSE=$ `r round(sum((m27$residuals)^2)/(length(m27$residuals)-2),2)`
