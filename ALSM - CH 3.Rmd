@@ -24,6 +24,9 @@ library(randtests)
 library(MASS)
 library(lmtest)
 library(moments)
+library(EnvStats)
+library(ALSM)
+library(trafo)
 
 df20<-read.csv("data/Chapter1DataSets/CH01PR20.txt", header=FALSE, sep=" ", col.names=c("Y","X"))
 df21<-read.csv("data/Chapter1DataSets/CH01PR21.txt", header=FALSE, sep=" ", col.names=c("Y","X"))
@@ -31,6 +34,17 @@ df27<-read.csv("data/Chapter1DataSets/CH01PR27.txt", header=FALSE, sep=" ", col.
 
 ```
 # Chapter 3
+
+## Diagnostics for Predictor Variable
+### Dot Plot
+#### Look for outliers
+#### Look for range (min and max)
+#### Look for evenness of spread
+### Sequence Plot
+#### Utlize whenever data are obtained in a sequence
+#### Look for pattern or trend
+### stem-and-leaf plot
+### Box Plot
 
 ## Departures from the model to be studied by residuals 
 ### The regression function is not linear (functional misspecification)  
@@ -84,8 +98,19 @@ This occurs in two situations mainly:  time series, and clustering due to hierar
 ##### Box plot, stem-and-leaf plots, and dot plots of residuals
 ##### Normal probability plot of residuals
 #### Statistical Tests
-##### Shapiro-Wilk
-##### Kolmogorov–Smirnov 
+##### Tests for Randomness
+###### Durbin-Watson (Chapter 12)
+##### Test for Constancy of Variance
+###### Residual Plot
+###### Brown-Forsythe
+###### Breusch-Pagan
+##### Tests for Outliers
+###### (Chapter 10)
+##### Tests for Normality
+###### chi-square
+###### Shapiro-Wilk
+###### Kolmogorov–Smirnov
+###### Lilliefors
 #### Remedial Measures
 ##### Generalized Linear Models
 ##### Transform Dependant Variable so that it is approximately normal
@@ -193,6 +218,8 @@ t^*_{BF}=\frac{\bar{d_1}-\bar{d_2}}{s\sqrt{\frac{1}{n_1}+\frac{1}{n_2}}}\\
 
 ### Breusch-Pagan Test for constancy of error variance
 
+<span style="display:block" id="note"> $\sigma_i^2$ is the variance of the error term $\epsilon_i$</span>
+
 <span style="display:block" id="math">
 $log_e \sigma_i^2 = \gamma_0 + \gamma_1 X_i\\
 \textrm{SSR is obtained from regressing the squared residuals } e_i^2 \textrm{ against } X_i\\
@@ -270,7 +297,7 @@ ggplot(data=df20, aes(x=X))+
      geom_dotplot()
 ```
 
-The values are fairly evenly spread between 0 and 10, with no outliers.
+Dot plots are useful to look for outliers, range and the evenness of spread in the data.  The values are fairly evenly spread between 0 and 10, with no outliers. 
 
 ###  The cases are given in time order.  Prepare a time plot for the number of copiers serviced.  What does your plot show?
 
@@ -279,7 +306,7 @@ plot(df20$Y, type="l", main="Index Plot", ylab="Copiers Serviced", pch=19)
 abline(h=0)
 ```
 
-There does not seem to be any relationship with time.
+Sequence plots are important when cases are given in sequence and can be used to see if there are any trends or patterns related to the sequence. In this case, there does not appear to be any trend or pattern related to the time sequence.
 
 ###  Prepare a stem-and-leaf plot of the residuals.  Are there any noteworthy features in this plot?
 
@@ -288,7 +315,7 @@ m20$residuals
 stem(m20$residuals, scale=2)
 ```
 
-The residuals seem normally distributed.
+Stem-and-leaf plots are useful to see if residuals are normally distributed and to check for any patterns.  The residuals seem normally distributed. I would note that though the middle of the distribution seems to be at 0, the negative tail seems longer than the positive tail.  Also, of interest, though the residuals were rounded to 1 decimal, none of the decimals were a 9 or a 1, and only one was a 2, and two were 8's. 
 
 ###  Prepare residual plots of $e_i$ versus $\hat{Y}$ and $e_i$ versus $X_i$ on separate graphs.  Do these plots provide the same information?  What departures from regression model (2.1) can be studied from these plots?  State your findings.
 
@@ -307,7 +334,7 @@ ggplot(data=t20) +
           y=TeX('$e_i$'))
 ```
 
-It appears that the mean of the residuals is 0 in regard to both $X$ and $\hat{Y}$ and that the variance in the residuals is constant with regard to $X$ or $\hat{Y}$.  Tis is consistent with the regression model (2.1).
+It appears that the mean of the residuals is 0 in regard to both $X$ and $\hat{Y}$ and that the variance in the residuals is constant with regard to $X$ or $\hat{Y}$.  It is consistent with the regression model (2.1).
 
 ###  Prepare a normal probability plot of the residuals.  Also obtain the coefficient of correlation between the ordered residuals and their expected values under normality.  does the normality assumption appear to be tenable here?  Use $\alpha=.05$
 
@@ -451,7 +478,7 @@ R2<-SSR/SSTO
 r<-sqrt(R2)
 ```
 
-The coefficient of correlation between the ordered residuals and their expected values under normality is `r r`
+The coefficient of correlation between the ordered residuals and their expected values under normality is `r r`.  With an n=10 and $\alpha=.01$, if r>.879 then we should conclude normality.
 
 ###  Prepare a time plot of the residuals.  What information is provided by your plot?
 
@@ -560,7 +587,7 @@ R2<-SSR/SSTO
 r<-sqrt(R2)
 ```
 
-The coefficient of correlation between the ordered residuals and their expected values under normality is `r r`
+The coefficient of correlation between the ordered residuals and their expected values under normality is `r r`.
 
 ###  Conduct the Breusch-Pagan test to determine whether or not the error variance varies with the level of $X$.  Use $\alpha=.01$. State the alternatives, decision rule, and conclusion.  Is your conclusion consistent with your preliminary findings in part (3)?
 
@@ -604,13 +631,13 @@ $\textrm{Decision Rule: }\\
 \textrm{If } F^* \leq F(1-\alpha; c-2; n-c) \textrm{, then conclude } H_0\\
 \textrm{If } F^* > F(1-\alpha; c-2; n-c) \textrm{, then conclude } H_a$
 
-Since $F^* =$ `r Fstar` and $F(1-\alpha; c-2; n-c) =$ `r F`, we can see that $F^* \leq F$ and we condlude $H_0$, that the function is linear. 
+Since $F^* =$ `r Fstar` and $F(1-\alpha; c-2; n-c) =$ `r F`, we can see that $F^* \leq F$ and we conclude $H_0$, that the function is linear. 
 
 ###  Does the test in part (2) detect other departures from regression model 2.1, such as lack of constant variance or lack or normality in the error terms?  Could the results of the test of lack of fit be affected by such departures?  Discuss.
 
 The lack of fit test assumes that the observations Y for given X are independent, normally distributed, and with constant variance.
 
-If these assumptions are not met, then a linear regression function may still fit the data, but the extimation of the regression parameters may not be accurate.
+If these assumptions are not met, then a linear regression function may still fit the data, but the estimation of the regression parameters may not be accurate.
 
 ## (Problem 3.17) 
 
@@ -632,7 +659,7 @@ Yes, the relation appears linear, though the variance appears to increase as X g
 
 ```{r} 
 m27<-lm(Y~X, data=df27)
-bc<-boxcox(m27)
+bc<-MASS::boxcox(m27, lambda = c(.3,.4,.5,.6,.7))
 lambda<-bc$x[which.max(bc$y)]
 ```
 
