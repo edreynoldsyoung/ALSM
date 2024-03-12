@@ -122,12 +122,12 @@ p:not(#math) {
 }
 
 #note {
+    position: relative;
     float: right;
     clear: right;
-    position: relative;
-    margin-right: -10%;
     width: 50%;
     font-size: 12px;
+    background-color: #e6ffff;
 }
 
 pre.r {

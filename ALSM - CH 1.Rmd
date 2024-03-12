@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE, cache=FALSE, warning=FALSE, message=FALSE)
 ## required install on system (sudo apt install ...):  libgdal-dev, libudunits2-dev, libcurl4-openssl-dev
 ## List of packages to check and possibly install
 
-packages <- c("tidyverse", "broom", "latex2exp", "data.table", "ggfortify", "randtests", "MASS", "lmtest", "here")
+packages <- c("tidyverse","broom","latex2exp","data.table","ggfortify","randtests","MASS","lmtest","here")
   
 check_load_pkgs <- function(packages) {
 
@@ -39,10 +39,9 @@ check_load_pkgs <- function(packages) {
     # Attempt to load package
     load_status <- tryCatch({
       library(pkg, character.only = TRUE)
-      return(TRUE)
     }, error = function(e) {
       return(paste("Failed to load", pkg, "Error:", e))
-    })
+    }) 
     
     # Check load status
     if (inherits(load_status, "try-error")) {
