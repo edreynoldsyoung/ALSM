@@ -81,9 +81,12 @@ s^2=MSE=\frac{SSE}{n-2}=\frac{\sum\epsilon_i^2}{n-2}\\$
 
 ## (Problem 1.19) Grade Point Average
 
+<span style="display:block" id="note">
+data for GPA problems is in file df19
+</span>
+
 ```{r}
 m19<-lm(Y~X, data=df19)
-t19<-augment(m19)
 ```
 
 The director of admissions of a small college selected 120 students at random from the new freshman class in a study to determine whether a student's grade point average at the end of the freshman year can be predicted from the ACT test score.  Use the data provided and a assume a first-order regression model is appropriate.

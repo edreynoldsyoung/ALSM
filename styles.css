@@ -125,7 +125,6 @@ p:not(#math) {
     position: relative;
     float: right;
     clear: right;
-    width: 50%;
     font-size: 12px;
     background-color: #e6ffff;
 }
