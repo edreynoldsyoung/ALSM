@@ -13,18 +13,52 @@ output:
 knitr::opts_chunk$set(echo = TRUE, cache=FALSE, warning=FALSE, message=FALSE)
 ```
 
-<!-- Load Libraries and Data -->
-```{r, include=FALSE}
-library(tidyverse)
-library(broom)
-library(latex2exp)
-library(data.table)
-library(ggfortify)
-library(randtests)
-library(MASS)
-library(lmtest)
-library(here)
+```{r check_packages, include=FALSE}
+## required install on system (sudo apt install ...):  libgdal-dev, libudunits2-dev, libcurl4-openssl-dev
+## List of packages to check and possibly install
 
+packages <- c("tidyverse", "broom", "latex2exp", "data.table", "ggfortify", "randtests", "MASS", "lmtest", "here")
+  
+check_load_pkgs <- function(packages) {
+
+  # Loop through each package to check if it is installed
+  for (pkg in packages) {
+    if (!requireNamespace(pkg, quietly = TRUE)) {
+      message(paste("installing the '", pkg, "' package", sep = ""))
+      
+      # Error handling for installation
+      tryCatch(
+        {
+          install.packages(pkg, Ncpus = parallel::detectCores())
+        },
+        error = function(e) {
+          message(paste("Failed to install ", pkg, ": ", e, sep = ""))
+        }
+      )
+    }
+    # Attempt to load package
+    load_status <- tryCatch({
+      library(pkg, character.only = TRUE)
+      return(TRUE)
+    }, error = function(e) {
+      return(paste("Failed to load", pkg, "Error:", e))
+    })
+    
+    # Check load status
+    if (inherits(load_status, "try-error")) {
+      message(load_status)
+    } else {
+      message(paste("Successfully loaded:", pkg))
+    }
+  }
+}
+
+# Run the function to check and install packages
+check_load_pkgs(packages)
+```
+
+<!-- Load Data -->
+```{r, include=FALSE}
 df19<-read.csv("data/Chapter1DataSets/CH01PR19.txt", header=FALSE, sep=" ", col.names=c("Y","X"))
 df20<-read.csv("data/Chapter1DataSets/CH01PR20.txt", header=FALSE, sep=" ", col.names=c("Y","X"))
 df21<-read.csv("data/Chapter1DataSets/CH01PR21.txt", header=FALSE, sep=" ", col.names=c("Y","X"))
