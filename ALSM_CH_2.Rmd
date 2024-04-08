@@ -1055,23 +1055,36 @@ $r$ = `r round(sqrt(SSR/SSTO), 4)`
 ## (Problem 2.62) Refer to the **CDI** data set.  Using $R^2$ as the criterion, which predictor variable accounts for the largest reduction in the variability in the number of active physicians?
 
 ```{r, message=FALSE}
-# cnames<-c("ID","County","State","Area","Pop","Young","Old","Phys","Beds","Crime","HighSchool","BA","Poverty","Unemploy","PerCapitaIncome","TotalIncome","Region")
-# df62<-read.csv("data/AppendixCDataSets/APPENC02.txt", sep=" ", col.names=cnames)
-# variability<-function(data, y){
-#     model<-lm(reformulate(y, "Phys"), data=data)
-#     anova<-anova(model)
-#     SSR<- anova$`Sum Sq`[1]
-#     SSE<- anova$`Sum Sq`[2]
-#     SSTO<-SSR+SSE
-#     R2<-SSR/SSTO
-#     return(round(R2,3))
-#}
-#nm1 <- setdiff(names(df62), "Phys")
-#ans<-transpose(df62[, lapply(nm1, variability, data = df62)])
-#ans[, Predictor:=nm1]
-#setnames(ans, "V1", "R2")
-#setcolorder(ans, c("Predictor", "R2"))
-#ans[order(-R2)]
+# Read the dataset and convert it into a data.table
+ cnames<-c("ID","County","State","Area","Pop","Young","Old","Phys","Beds","Crime","HighSchool","BA","Poverty","Unemploy","PerCapitaIncome","TotalIncome","Region")
+df62<-fread("data/AppendixCDataSets/APPENC02.txt", sep=" ", col.names=cnames)
+ 
+ # Define the variability function
+ variability<-function(data, y){
+     model<-lm(reformulate(y, "Phys"), data=data)
+     anova<-anova(model)
+     SSR<- anova$`Sum Sq`[1]
+     SSE<- anova$`Sum Sq`[2]
+     SSTO<-SSR+SSE
+     R2<-SSR/SSTO
+     return(round(R2,3))
+ }
+ 
+# Calculate R^2 for each predictor variable 
+nm1 <- setdiff(names(df62), "Phys")
+
+# Initialize an empty data.table to store results
+ans <- data.table(Predictor = nm1, R2 = numeric(length(nm1)))
+
+# Loop through each predictor name and calculate R2
+for (pred in nm1) {
+    ans[Predictor == pred, R2 := variability(df62, pred)]
+}
+
+ans <- ans[order(-R2)]  # Order the rows by R2 in descending order
+
+# Display the result
+ans
 ```
 
 
@@ -1085,27 +1098,27 @@ The variables accounting for the greatest reduction in variability in the number
 
 ## (Problem 2.63) Refer to the CDI data set.  For each geographic region, regress per capita income against the percentage of individuals ina county having at least a bachelor's degree.  Obtain a separate interval estimate of $\beta_1$ for each region.  Use a 90 percent confidence coefficient in each case.  Do the regression nes for the different regions appear to have similar slopes?
 
- ```{r, message=FALSE}
-# cnames<-c("ID","County","State","Area","Pop","Young","Old","Phys","Beds","Crime","HighSchool","BA","Poverty","Unemploy","PerCapitaIncome","TotalIncome","Region")
-# dt<-read.csv("data/AppendixCDataSets/APPENC02.txt", sep=" ", col.names=cnames)
-# variability<-function(R, data){
-#     model<-lm(PerCapitaIncome~BA, data=data, subset=(Region==R))
-#     n<-length(data[Region==R])
-#     B1<-model$coefficients[2]
-#     MSE<-sum(model$residuals^2)/(n-2)
-#     s2b1<-MSE/sum((data[Region==R, BA]-mean(data[Region==R, BA]))^2)
-#     sb1<-sqrt(s2b1)
-#     t<-qt(.95,n-2)
-#     lb<-B1-t*sb1
-#     ub<-B1+t*sb1
-#     rt<-c(lb,B1,ub)
-#     return(rt)
-#}
-#ans<-transpose(dt[, lapply(1:4, variability, data = .SD)])
-#ans[, Region:=1:4]
-#setnames(ans, 1:3, c("Lower Limit", "Beta_1", "Upper Limit"))
-#setcolorder(ans, c("Region","Lower Limit", "Beta_1", "Upper Limit"))
-#ans
+```{r, message=FALSE}
+cnames<-c("ID","County","State","Area","Pop","Young","Old","Phys","Beds","Crime","HighSchool","BA","Poverty","Unemploy","PerCapitaIncome","TotalIncome","Region")
+dt<-fread("data/AppendixCDataSets/APPENC02.txt", sep=" ", col.names=cnames)
+ variability<-function(R, data){
+     model<-lm(PerCapitaIncome~BA, data=data, subset=(Region==R))
+     n<-length(data[Region==R])
+     B1<-model$coefficients[2]
+     MSE<-sum(model$residuals^2)/(n-2)
+     s2b1<-MSE/sum((data[Region==R, BA]-mean(data[Region==R, BA]))^2)
+     sb1<-sqrt(s2b1)
+     t<-qt(.95,n-2)
+     lb<-B1-t*sb1
+     ub<-B1+t*sb1
+     rt<-c(lb,B1,ub)
+     return(rt)
+}
+ans<-transpose(dt[, lapply(1:4, variability, data = .SD)])
+ans[, Region:=1:4]
+setnames(ans, 1:3, c("Lower Limit", "Beta_1", "Upper Limit"))
+setcolorder(ans, c("Region","Lower Limit", "Beta_1", "Upper Limit"))
+ans
 ```
 The Slopes for the different regions appear to vary considerably, however, the 90% confidence intervals overlap, so I cannot say variation might not be random.
 
