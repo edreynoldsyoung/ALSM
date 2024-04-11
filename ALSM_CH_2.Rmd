@@ -195,6 +195,16 @@ $r= \pm \sqrt{R^2}$
 </span>
 
 ****
+
+### Bivariate Correlation Coefficients - Pearson product-moment correlation coefficient
+
+<span style="display:block" id="math">
+$r_{12} = \frac{\sum(Y_{i1} - \hat{Y_1})(Y_{i2} - \hat{Y_2})}{\sqrt{\sum(Y_{i1} - \hat{Y_1})^2 \sum(Y_{i2} - \hat{Y_2})^2}}$
+</span>
+
+***
+
+### 
  
 ## (Problem 2.5) Refer to **Copier maintenance** Problem 1.20
 
@@ -1096,12 +1106,16 @@ The variables accounting for the greatest reduction in variability in the number
 
 3. Population of the County
 
-## (Problem 2.63) Refer to the CDI data set.  For each geographic region, regress per capita income against the percentage of individuals ina county having at least a bachelor's degree.  Obtain a separate interval estimate of $\beta_1$ for each region.  Use a 90 percent confidence coefficient in each case.  Do the regression nes for the different regions appear to have similar slopes?
+## (Problem 2.63) Refer to the CDI data set.  For each geographic region, regress per capita income against the percentage of individuals in a county having at least a bachelor's degree.  Obtain a separate interval estimate of $\beta_1$ for each region.  Use a 90 percent confidence coefficient in each case.  Do the regression lines for the different regions appear to have similar slopes?
 
 ```{r, message=FALSE}
+# Read the dataset and convert it into a data.table
+
 cnames<-c("ID","County","State","Area","Pop","Young","Old","Phys","Beds","Crime","HighSchool","BA","Poverty","Unemploy","PerCapitaIncome","TotalIncome","Region")
 dt<-fread("data/AppendixCDataSets/APPENC02.txt", sep=" ", col.names=cnames)
- variability<-function(R, data){
+
+# Define the variability function
+variability<-function(R, data){
      model<-lm(PerCapitaIncome~BA, data=data, subset=(Region==R))
      n<-length(data[Region==R])
      B1<-model$coefficients[2]
@@ -1114,6 +1128,8 @@ dt<-fread("data/AppendixCDataSets/APPENC02.txt", sep=" ", col.names=cnames)
      rt<-c(lb,B1,ub)
      return(rt)
 }
+
+
 ans<-transpose(dt[, lapply(1:4, variability, data = .SD)])
 ans[, Region:=1:4]
 setnames(ans, 1:3, c("Lower Limit", "Beta_1", "Upper Limit"))
@@ -1122,7 +1138,17 @@ ans
 ```
 The Slopes for the different regions appear to vary considerably, however, the 90% confidence intervals overlap, so I cannot say variation might not be random.
 
-## (Problem 2.47)
+## (Problem 2.47)  Refer to Muscle mas Problem 1.27.  Assume that the normal bivatiate model (2.74) is appropriate.
+
+### Compute the Pearson product moment correlation coefficient $r_{12}$
+
+### Test whether muscle mass and age are statisticall independent in the population; use $\alpha = .05$.  State th alternatives, decision rule, and conclusion.
+
+### The bivariate normal model (2.74) assumption is possibly inappropriate here. Compute the Spearman rank correlation coefficient, $r_s$.
+
+### Repeat part (b), this time basing the test of independence on the Spearman rank correlation computed in part (c) and test statistic (2.101).  Use $\alpha = .05$.  State the alternatives, decision rule, and conclusion.
+
+### How do your estimates and conclusions in parts (a) and (b) compare to those obtained in parts (c) and (d)?
 
 
 
